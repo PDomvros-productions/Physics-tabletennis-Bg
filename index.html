@@ -1,0 +1,4997 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Πινγκ Πονγκ Φυσικής - Β΄ Γυμνασίου</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#ff4f87;
+      --bg2:#6b5cff;
+      --bg3:#08c4ff;
+      --ink:#1d2240;
+      --good:#20b45b;
+      --bad:#f25555;
+      --soft:#eef4ff;
+      --shadow:0 8px 24px rgba(0,0,0,0.14);
+      --game-scale:1;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: 'Comfortaa', sans-serif;
+      background:
+        linear-gradient(135deg, rgba(255,79,135,0.18), rgba(107,92,255,0.15), rgba(8,196,255,0.16)),
+        #f7f8ff;
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    body.compact-lock {
+      overflow: hidden;
+    }
+
+    img { max-width: 100%; display: block; }
+
+    .appShell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* WELCOME (Unchanged as requested) */
+    #welcomeScreen {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.35), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.28), transparent 24%),
+        linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #welcomeScreen::before,
+    #welcomeScreen::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      background:rgba(255,255,255,0.12);
+      filter: blur(10px);
+      pointer-events:none;
+    }
+
+    #welcomeScreen::before{
+      width: 320px;
+      height: 320px;
+      left: -80px;
+      top: -70px;
+    }
+
+    #welcomeScreen::after{
+      width: 280px;
+      height: 280px;
+      right: -70px;
+      bottom: -60px;
+    }
+
+    .cornerLogo {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 82px;
+      max-width: 16vw;
+      z-index: 3;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+    }
+
+    .welcomeInner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 10px 14px 4px;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcomeLeft {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .heroCard {
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 22px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+      padding: 10px;
+      width: min(360px, 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .heroCard img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+
+    .welcomeBall {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff7cf, #ffbd3e 58%, #ff8a00 100%);
+      box-shadow: 0 0 0 8px rgba(255,189,62,0.12), 0 8px 16px rgba(255,138,0,0.35);
+      top: 50%;
+      left: 7%;
+      z-index: 3;
+      animation: pingpongWelcome 2.2s ease-in-out infinite alternate;
+    }
+
+    .welcomeTrail {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background:
+        radial-gradient(circle at 18% 42%, rgba(255,255,255,0.18), transparent 7%),
+        radial-gradient(circle at 38% 58%, rgba(255,255,255,0.16), transparent 6%),
+        radial-gradient(circle at 57% 40%, rgba(255,255,255,0.13), transparent 5%),
+        radial-gradient(circle at 77% 60%, rgba(255,255,255,0.11), transparent 5%);
+      animation: trailPulse 2.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pingpongWelcome {
+      0%   { left: 8%;  transform: translateY(-44px) scale(1); }
+      25%  { left: 30%; transform: translateY(10px) scale(0.96); }
+      50%  { left: 50%; transform: translateY(-16px) scale(1); }
+      75%  { left: 70%; transform: translateY(12px) scale(0.95); }
+      100% { left: 88%; transform: translateY(-38px) scale(1); }
+    }
+
+    @keyframes trailPulse {
+      0% { opacity: 0.55; }
+      100% { opacity: 1; }
+    }
+
+    .welcomeRight {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      padding-right: 4px;
+    }
+
+    .welcomeTitle {
+      margin: 0;
+      font-size: clamp(1.7rem, 3.4vw, 2.8rem);
+      line-height: 1.02;
+      font-weight: 700;
+    }
+
+    .welcomeSubtitle {
+      margin: 0;
+      font-size: clamp(0.92rem, 1.6vw, 1.12rem);
+      line-height: 1.24;
+      opacity: 0.96;
+      font-weight: 600;
+      max-width: 650px;
+    }
+
+    .instructionCard,
+    .avatarCard {
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 18px;
+      padding: 10px 10px 8px;
+      backdrop-filter: blur(8px);
+    }
+
+    .instructionCard h2,
+    .avatarCard h2 {
+      margin: 0 0 8px;
+      font-size: 0.96rem;
+    }
+
+    .instructionGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 8px;
+    }
+
+    .instructionItem {
+      background: rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 8px 9px;
+      line-height: 1.18;
+      font-size: 0.79rem;
+      font-weight: 600;
+    }
+
+    .avatarGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .avatarSelector label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .avatarSelector select {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 9px 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: rgba(255,255,255,0.92);
+      color: var(--ink);
+      font-weight: 700;
+      min-height: 40px;
+    }
+
+    .welcomeActions {
+      display: flex;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .ctaBtn {
+      border: none;
+      border-radius: 14px;
+      padding: 11px 18px;
+      font-family: inherit;
+      font-size: 0.96rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+    }
+
+    .ctaBtn:hover { transform: translateY(-2px); }
+
+    .ctaPrimary {
+      background: white;
+      color: #c9184a;
+      min-width: 220px;
+    }
+
+    .globalFooter {
+      text-align: center;
+      padding: 6px 14px 8px;
+      font-size: 0.74rem;
+      line-height: 1.22;
+      font-weight: 600;
+    }
+
+    #welcomeScreen .globalFooter {
+      color: rgba(255,255,255,0.96);
+      z-index: 1;
+      position: relative;
+    }
+
+    /* COUNTDOWN */
+    #countdownOverlay {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.08), rgba(17, 18, 38, 0.72)),
+        rgba(17, 18, 38, 0.62);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      overflow: hidden;
+    }
+
+    .countdownNumber {
+      color: white;
+      font-size: clamp(4rem, 14vw, 9rem);
+      font-weight: 700;
+      text-shadow: 0 8px 24px rgba(0,0,0,0.28);
+      animation: popIn 0.9s ease;
+      z-index: 2;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.35); opacity: 0; }
+      40% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* GAME SCREEN (Increased Font Sizes) */
+    #gameScreen {
+      display: none;
+      min-height: 100vh;
+      height: 100vh;
+      padding: 0;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    .gameViewport {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 6px;
+    }
+
+    .gameScaleWrap {
+      width: 1320px;
+      height: 780px;
+      transform: scale(var(--game-scale));
+      transform-origin: top center;
+      will-change: transform;
+    }
+
+    .wrap {
+      width: 1320px;
+      height: 780px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto auto 86px auto auto;
+      gap: 8px;
+      overflow: hidden;
+      align-content: start;
+    }
+
+    .topHeader {
+      position: relative;
+      background: linear-gradient(135deg, #ff5ca0, #6b5cff, #13b9ff);
+      color: white;
+      border-radius: 18px;
+      padding: 12px 84px 12px 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .topHeader::before {
+      content:"";
+      position:absolute;
+      inset:auto auto -35px -35px;
+      width: 160px;
+      height: 160px;
+      border-radius:50%;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .topHeader h1 {
+      margin: 0 0 2px;
+      font-size: 1.95rem; /* Increased */
+      line-height: 1.04;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topHeader p {
+      margin: 0;
+      font-size: 1.05rem; /* Increased */
+      line-height: 1.14;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topHeader .cornerLogo {
+      top: 8px;
+      right: 8px;
+      width: 62px;
+      max-width: none;
+    }
+
+    .controlPanel {
+      background: rgba(255,255,255,0.84);
+      backdrop-filter: blur(8px);
+      border: 1px solid #ffffffaa;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1.25fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .controlGroup label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.88rem; /* Increased */
+      font-weight: 700;
+      color: #4b4d73;
+    }
+
+    .controlGroup select,
+    .controlGroup button {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 1.05rem; /* Increased */
+      background: var(--soft);
+      color: var(--ink);
+      font-weight: 600;
+      min-height: 44px;
+    }
+
+    .controlGroup select:focus {
+      outline: 3px solid rgba(107,92,255,0.18);
+    }
+
+    .gameBtn {
+      background: linear-gradient(135deg, #ff7a00, #ff4f87);
+      color: #c9184a !important;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(255,79,135,0.24);
+      transition: transform 0.16s ease;
+    }
+
+    .gameBtn:hover { transform: translateY(-1px); }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .playerCard {
+      background: linear-gradient(180deg, #ffffff, #f6f8ff);
+      border-radius: 16px;
+      padding: 12px;
+      border: 3px solid transparent;
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .avatarDisplay {
+      font-size: 1.8rem; /* Increased */
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .playerCard h2 {
+      margin: 0;
+      font-size: 1.2rem; /* Increased */
+      color: #36406b;
+      line-height: 1.08;
+    }
+
+    .score {
+      font-size: 2.6rem; /* Increased */
+      font-weight: 700;
+      color: #121733;
+      line-height: 1.02;
+    }
+
+    .turnLight {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin: 4px auto 0;
+      background: #d9deef;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.22);
+      transition: 0.18s ease;
+    }
+
+    .active-turn {
+      background: linear-gradient(180deg, #f2fff8, #e7fff0);
+      border-color: #20b45b;
+      box-shadow: 0 0 0 4px rgba(32,180,91,0.14), var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    .active-turn .turnLight {
+      background: #20b45b;
+      box-shadow: 0 0 10px rgba(32,180,91,0.8), 0 0 18px rgba(32,180,91,0.45);
+    }
+
+    .winner-glow {
+      animation: winnerGlow 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes winnerGlow {
+      0% { box-shadow: 0 0 0 4px rgba(255,255,255,0.0), 0 0 0 rgba(255,255,255,0); }
+      100% { box-shadow: 0 0 0 4px rgba(255,255,255,0.18), 0 0 24px rgba(255,255,255,0.46); }
+    }
+
+    .midInfo {
+      min-width: 180px;
+      background: linear-gradient(180deg, #ffffff, #f8f4ff);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      gap: 4px;
+      font-weight: 700;
+      color: #5c2a90;
+      font-size: 1.1rem; /* Increased */
+    }
+
+    .arena {
+      position: relative;
+      height: 86px;
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.5)),
+        linear-gradient(135deg, #ffd4e5, #e7dcff, #d6f6ff);
+      border: 3px solid rgba(255,255,255,0.85);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .net {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      transform: translateX(-50%);
+      background: repeating-linear-gradient(to bottom, #8c8db2 0 7px, transparent 7px 12px);
+      opacity: 0.9;
+    }
+
+    .ball {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 22px;
+      height: 22px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff7cf, #ffbd3e 58%, #ff8a00 100%);
+      box-shadow: 0 8px 16px rgba(255,138,0,0.28);
+      transition: left 0.35s ease;
+    }
+
+    .questionPanel {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid #ffffffcc;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: unset;
+      height: auto;
+      overflow: hidden;
+      align-self: start;
+    }
+
+    .questionMeta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .turnText {
+      font-size: 1.2rem; /* Increased */
+      font-weight: 700;
+      color: #2b3a68;
+      line-height: 1.1;
+    }
+
+    .category {
+      justify-self: end;
+      background: linear-gradient(135deg, #ffe6f1, #efe7ff);
+      color: #7b1d72;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.95rem; /* Increased */
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.05;
+    }
+
+    .question {
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 1.75rem; /* Increased */
+      line-height: 1.18;
+      font-weight: 700;
+      color: #161b36;
+      padding: 8px 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.72), rgba(246,248,255,0.72));
+      border-radius: 14px;
+    }
+
+    .question.idle {
+      color: #66719b;
+      font-size: 1.2rem; /* Increased */
+      font-style: italic;
+      background: linear-gradient(180deg, rgba(250,251,255,0.9), rgba(243,246,255,0.9));
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      flex: 0 0 auto;
+      align-content: start;
+    }
+
+    .answers.idle {
+      display: none;
+    }
+
+    .answerBtn {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 14px;
+      min-height: 64px;
+      font-family: inherit;
+      font-size: 1.3rem; /* Increased */
+      line-height: 1.15;
+      background: linear-gradient(180deg, #eef3ff, #e5edff);
+      color: #1e2448;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+      box-shadow: 0 6px 14px rgba(39,54,97,0.08);
+      text-align: center;
+    }
+
+    .answerBtn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: linear-gradient(180deg, #e4edff, #dbe8ff);
+    }
+
+    .answerBtn:disabled {
+      opacity: 0.86;
+      cursor: default;
+    }
+
+    .correct {
+      background: linear-gradient(180deg, #c8ffd9, #aff0c4) !important;
+      color: #115b2d !important;
+    }
+
+    .wrong {
+      background: linear-gradient(180deg, #ffd2d2, #ffbbbb) !important;
+      color: #7b2323 !important;
+    }
+
+    .message {
+      min-height: 24px;
+      text-align: center;
+      font-size: 1.05rem; /* Increased */
+      line-height: 1.14;
+      font-weight: 700;
+      color: #35406f;
+      padding: 2px 4px;
+    }
+
+    #gameScreen .globalFooter {
+      color: #48507e;
+      padding-top: 4px;
+      padding-bottom: 4px;
+      font-size: 0.75rem;
+    }
+
+    .smallNote {
+      font-size: 0.8rem; /* Increased */
+      color: #606792;
+      font-weight: 600;
+      line-height: 1.12;
+    }
+    /* Rest of CSS remains unchanged */
+    .confettiLayer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 9999;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 16px;
+      opacity: 0.92;
+      top: -20px;
+      animation: confettiFall linear forwards;
+      border-radius: 3px;
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0.9; }
+    }
+
+    @media (max-width: 1080px) {
+      .welcomeInner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding-top: 22px;
+      }
+
+      .welcomeRight {
+        align-items: center;
+        padding-right: 0;
+      }
+
+      .instructionGrid,
+      .avatarGrid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      body.compact-lock {
+        overflow: auto;
+      }
+
+      #gameScreen {
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+      }
+
+      .gameViewport {
+        height: auto;
+        min-height: 100vh;
+        padding: 8px;
+      }
+
+      .gameScaleWrap {
+        width: 100%;
+        height: auto;
+        transform: none !important;
+      }
+
+      .wrap {
+        width: 100%;
+        height: auto;
+        min-height: calc(100vh - 16px);
+        grid-template-rows: auto;
+      }
+
+      .scoreboard,
+      .controlPanel,
+      .answers,
+      .questionMeta {
+        grid-template-columns: 1fr;
+      }
+
+      .midInfo { min-width: unset; }
+      .category { justify-self: stretch; }
+      .answerBtn { min-height: 56px; }
+    }
+  </style>
+</head>
+<body class="compact-lock">
+  <div class="appShell">
+
+    <section id="welcomeScreen">
+      <img src="logo.png" alt="Logo" class="cornerLogo">
+
+      <div class="welcomeInner">
+        <div class="welcomeLeft">
+          <div class="heroCard">
+            <div class="welcomeTrail"></div>
+            <div class="welcomeBall"></div>
+            <img src="image_biology.png" alt="Εικονογράφηση Φυσικής">
+          </div>
+        </div>
+
+        <div class="welcomeRight">
+          <h1 class="welcomeTitle">Πινγκ Πονγκ Φυσικής</h1>
+          <p class="welcomeSubtitle">
+            Μια γρήγορη επανάληψη στη Φυσική της Β΄ Γυμνασίου.
+          </p>
+
+          <div class="instructionCard">
+            <h2>Οδηγίες</h2>
+            <div class="instructionGrid">
+              <div class="instructionItem">🎯 Δύο παίκτες/τριες - ομάδες απαντούν εναλλάξ σε ερωτήσεις πολλαπλής επιλογής.</div>
+              <div class="instructionItem">💡 Η ομάδα που έχει σειρά φωτίζεται με πράσινη ένδειξη.</div>
+              <div class="instructionItem">✅ Κάθε σωστή απάντηση δίνει 1 πόντο.</div>
+              <div class="instructionItem">❌ Σε λάθος απάντηση εμφανίζεται η σωστή επιλογή.</div>
+              <div class="instructionItem">⚛️ Μπορείς να επιλέξεις όλη την ύλη, συγκεκριμένο κεφάλαιο ή συγκεκριμένη υποενότητα.</div>
+              <div class="instructionItem">🏆 Νικήτρια ομάδα είναι εκείνη με το υψηλότερο σκορ στο τέλος.</div>
+            </div>
+          </div>
+
+          <div class="avatarCard">
+            <h2>Επιλογή avatar ομάδων</h2>
+            <div class="avatarGrid">
+              <div class="avatarSelector">
+                <label for="avatar1">Παίκτης/τρια - Ομάδα 1</label>
+                <select id="avatar1">
+                  <option value="🧠">🧠</option>
+                  <option value="🚀">🚀</option>
+                  <option value="😎">😎</option>
+                  <option value="🔥">🔥</option>
+                  <option value="🎯">🎯</option>
+                  <option value="⚡">⚡</option>
+                  <option value="🌟">🌟</option>
+                  <option value="🤖">🤖</option>
+                </select>
+              </div>
+              <div class="avatarSelector">
+                <label for="avatar2">Παίκτης/τρια - Ομάδα 2</label>
+                <select id="avatar2">
+                  <option value="🎯">🎯</option>
+                  <option value="🧠">🧠</option>
+                  <option value="🚀">🚀</option>
+                  <option value="😎">😎</option>
+                  <option value="🔥">🔥</option>
+                  <option value="⚡">⚡</option>
+                  <option value="🌟">🌟</option>
+                  <option value="🤖">🤖</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="welcomeActions">
+            <button class="ctaBtn ctaPrimary" onclick="startFromWelcome()">Έναρξη Παιχνιδιού</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="globalFooter">
+        Παναγιώτης Δόμβρος, Εκπαιδευτικός Αγγλικής & Θεατρολόγος, Διευθυντής 1ου Γυμνασίου Πυλαίας
+      </div>
+    </section>
+
+    <section id="gameScreen">
+      <div class="gameViewport">
+        <div class="gameScaleWrap" id="gameScaleWrap">
+          <div class="wrap">
+
+            <header class="topHeader">
+              <img src="logo.png" alt="Logo" class="cornerLogo">
+              <h1>Πινγκ Πονγκ Φυσικής - Β΄ Γυμνασίου</h1>
+              <p>Επίλεξε ύλη Φυσικής και πάτησε έναρξη για να ξεκινήσει ο αγώνας.</p>
+            </header>
+
+            <section class="controlPanel">
+              <div class="controlGroup">
+                <label for="modeSelect">Τύπος ερωτήσεων</label>
+                <select id="modeSelect">
+                  <option value="all">Τυχαίες από όλη την ύλη</option>
+                  <option value="chapter">Συγκεκριμένο κεφάλαιο</option>
+                  <option value="section">Συγκεκριμένη υποενότητα</option>
+                </select>
+              </div>
+
+              <div class="controlGroup">
+                <label for="chapterSelect">Επιλογή</label>
+                <select id="chapterSelect"></select>
+              </div>
+
+              <div class="controlGroup">
+                <label for="questionCount">Πλήθος ερωτήσεων</label>
+                <select id="questionCount">
+                  <option value="10">10 ερωτήσεις</option>
+                  <option value="15" selected>15 ερωτήσεις</option>
+                  <option value="20">20 ερωτήσεις</option>
+                  <option value="30">30 ερωτήσεις</option>
+                  <option value="40">40 ερωτήσεις</option>
+                </select>
+              </div>
+
+              <div class="controlGroup">
+                <label>&nbsp;</label>
+                <button class="gameBtn" onclick="startGame()">Έναρξη / Νέο Παιχνίδι</button>
+              </div>
+            </section>
+
+            <section class="scoreboard">
+              <div class="playerCard" id="player1Card">
+                <div class="avatarDisplay" id="player1AvatarDisplay">🧠</div>
+                <h2>Παίκτης/τρια - Ομάδα 1</h2>
+                <div class="score" id="p1Score">0</div>
+                <div class="turnLight"></div>
+              </div>
+
+              <div class="midInfo">
+                <div id="phaseLabel">Αναμονή έναρξης</div>
+                <div id="roundInfo">Γύρος 0 / 0</div>
+                <div class="smallNote" id="selectionInfo">Επίλεξε τρόπο παιχνιδιού και πάτησε έναρξη.</div>
+              </div>
+
+              <div class="playerCard" id="player2Card">
+                <div class="avatarDisplay" id="player2AvatarDisplay">🎯</div>
+                <h2>Παίκτης/τρια - Ομάδα 2</h2>
+                <div class="score" id="p2Score">0</div>
+                <div class="turnLight"></div>
+              </div>
+            </section>
+
+            <div class="arena">
+              <div class="net"></div>
+              <div class="ball" id="ball"></div>
+            </div>
+
+            <section class="questionPanel">
+              <div class="questionMeta">
+                <div class="turnText" id="turnText">Πάτησε «Έναρξη / Νέο Παιχνίδι» για να ξεκινήσει ο αγώνας.</div>
+                <div class="category" id="categoryLabel">Κατηγορία: -</div>
+              </div>
+
+              <div class="question idle" id="question">Ο χώρος ερωτήσεων θα ενεργοποιηθεί μόλις επιλεγεί κατηγορία και πατηθεί η έναρξη.</div>
+              <div class="answers idle" id="answers"></div>
+              <div class="message" id="message"></div>
+            </section>
+
+            <div class="globalFooter">
+              Παναγιώτης Δόμβρος, Εκπαιδευτικός Αγγλικής & Θεατρολόγος, Διευθυντής του 1ου Γυμνασίου Πυλαίας
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="countdownOverlay">
+    <div class="countdownNumber" id="countdownNumber">3</div>
+  </div>
+
+  <div class="confettiLayer" id="confettiLayer"></div>
+
+  
+  <script>
+    const chapterData = {
+  "K1": {
+    "title": "Κεφάλαιο 1 - Εισαγωγή",
+    "short": "Κεφάλαιο 1",
+    "sections": {
+      "1.3": {
+        "title": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+        "short": "Ενότητα 1.3",
+        "questions": [
+          {
+            "category": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+            "prompt": "Τι ονομάζουμε φυσικό μέγεθος;",
+            "options": [
+              "Κάθε ιδιότητα που μπορεί να μετρηθεί",
+              "Κάθε φαινόμενο που δεν αλλάζει ποτέ",
+              "Κάθε όργανο μέτρησης",
+              "Κάθε μαθηματική πράξη"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K1",
+            "sectionKey": "1.3"
+          },
+          {
+            "category": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+            "prompt": "Γιατί χρειάζονται μονάδες μέτρησης στη Φυσική;",
+            "options": [
+              "Για να περιγράφουμε με ακρίβεια και κοινό τρόπο τα μεγέθη",
+              "Για να αποφεύγουμε όλες τις μετρήσεις",
+              "Για να αλλάζουμε το μέγεθος των σωμάτων",
+              "Για να εξηγούμε μόνο ποιοτικά τα φαινόμενα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K1",
+            "sectionKey": "1.3"
+          },
+          {
+            "category": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+            "prompt": "Ποια είναι η μονάδα μήκους στο S.I.;",
+            "options": [
+              "το κιλό (kg)",
+              "το μέτρο (m)",
+              "το δευτερόλεπτο (s)",
+              "το νιούτον (N)"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K1",
+            "sectionKey": "1.3"
+          },
+          {
+            "category": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+            "prompt": "Ποια είναι η μονάδα μάζας στο S.I.;",
+            "options": [
+              "το γραμμάριο (g)",
+              "το κιλό (kg)",
+              "το λίτρο (L)",
+              "το μέτρο (m)"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K1",
+            "sectionKey": "1.3"
+          },
+          {
+            "category": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+            "prompt": "Ποια είναι η μονάδα χρόνου στο S.I.;",
+            "options": [
+              "το λεπτό (min)",
+              "η ώρα (h)",
+              "το δευτερόλεπτο (s)",
+              "η ημέρα"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K1",
+            "sectionKey": "1.3"
+          },
+          {
+            "category": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+            "prompt": "Ποια από τις παρακάτω είναι παράγωγη μονάδα;",
+            "options": [
+              "m",
+              "kg",
+              "s",
+              "m/s"
+            ],
+            "correctIndex": 3,
+            "chapterKey": "K1",
+            "sectionKey": "1.3"
+          },
+          {
+            "category": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+            "prompt": "Τι δείχνει μια μέτρηση 5 m;",
+            "options": [
+              "Μόνο τον αριθμό",
+              "Μόνο τη μονάδα",
+              "Αριθμό και μονάδα μαζί",
+              "Το σχήμα του σώματος"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K1",
+            "sectionKey": "1.3"
+          },
+          {
+            "category": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+            "prompt": "Ποιο είναι υποπολλαπλάσιο του μέτρου;",
+            "options": [
+              "km",
+              "cm",
+              "Mg",
+              "h"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K1",
+            "sectionKey": "1.3"
+          },
+          {
+            "category": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+            "prompt": "Το 1 km ισούται με:",
+            "options": [
+              "10 m",
+              "100 m",
+              "1.000 m",
+              "10.000 m"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K1",
+            "sectionKey": "1.3"
+          },
+          {
+            "category": "Ενότητα 1.3: Τα φυσικά μεγέθη και οι μονάδες τους",
+            "prompt": "Σε ποια περίπτωση η διατύπωση είναι σωστή;",
+            "options": [
+              "Η μάζα είναι 7",
+              "Το μήκος είναι μέτρα",
+              "Ο χρόνος είναι 3 s",
+              "Η ταχύτητα είναι κιλά"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K1",
+            "sectionKey": "1.3"
+          }
+        ]
+      }
+    }
+  },
+  "K2": {
+    "title": "Κεφάλαιο 2 - Κινήσεις",
+    "short": "Κεφάλαιο 2",
+    "sections": {
+      "2.1": {
+        "title": "Ενότητα 2.1: Περιγραφή της κίνησης",
+        "short": "Ενότητα 2.1",
+        "questions": [
+          {
+            "category": "Ενότητα 2.1: Περιγραφή της κίνησης",
+            "prompt": "Πότε λέμε ότι ένα σώμα κινείται;",
+            "options": [
+              "Όταν αλλάζει χρώμα",
+              "Όταν αλλάζει θέση ως προς σημείο αναφοράς",
+              "Όταν αυξάνει η μάζα του",
+              "Όταν παραμένει ακίνητο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K2",
+            "sectionKey": "2.1"
+          },
+          {
+            "category": "Ενότητα 2.1: Περιγραφή της κίνησης",
+            "prompt": "Τι χρειάζεται για να περιγράψουμε την κίνηση ενός σώματος;",
+            "options": [
+              "Μόνο τη μάζα του",
+              "Σημείο αναφοράς και χρόνο",
+              "Μόνο το χρώμα του",
+              "Μόνο τη θερμοκρασία του"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K2",
+            "sectionKey": "2.1"
+          },
+          {
+            "category": "Ενότητα 2.1: Περιγραφή της κίνησης",
+            "prompt": "Τι είναι η τροχιά;",
+            "options": [
+              "Η δύναμη που κινεί το σώμα",
+              "Το σύνολο των διαδοχικών θέσεων του κινητού",
+              "Η μάζα του κινητού",
+              "Το υλικό από το οποίο είναι φτιαγμένο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K2",
+            "sectionKey": "2.1"
+          },
+          {
+            "category": "Ενότητα 2.1: Περιγραφή της κίνησης",
+            "prompt": "Σε μια ευθύγραμμη κίνηση, η τροχιά είναι:",
+            "options": [
+              "κύκλος",
+              "σπείρα",
+              "ευθεία γραμμή",
+              "τυχαία καμπύλη"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K2",
+            "sectionKey": "2.1"
+          },
+          {
+            "category": "Ενότητα 2.1: Περιγραφή της κίνησης",
+            "prompt": "Τι περιγράφει η θέση ενός σώματος;",
+            "options": [
+              "Πού βρίσκεται σε σχέση με το σύστημα αναφοράς",
+              "Πόσο γρήγορα κινείται",
+              "Τη μάζα του",
+              "Την πυκνότητά του"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K2",
+            "sectionKey": "2.1"
+          },
+          {
+            "category": "Ενότητα 2.1: Περιγραφή της κίνησης",
+            "prompt": "Η μετατόπιση ενός σώματος συνδέεται με:",
+            "options": [
+              "τη διαφορά αρχικής και τελικής θέσης",
+              "το συνολικό χρόνο μόνο",
+              "τη μάζα και τον όγκο",
+              "τη θερμοκρασία του σώματος"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K2",
+            "sectionKey": "2.1"
+          },
+          {
+            "category": "Ενότητα 2.1: Περιγραφή της κίνησης",
+            "prompt": "Ποιο από τα παρακάτω αποτελεί παράδειγμα κίνησης στον μικρόκοσμο;",
+            "options": [
+              "Η κίνηση των ηλεκτρονίων",
+              "Η ανάπτυξη ενός φυτού",
+              "Η εξάτμιση της βροχής",
+              "Η διάβρωση ενός βράχου"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K2",
+            "sectionKey": "2.1"
+          },
+          {
+            "category": "Ενότητα 2.1: Περιγραφή της κίνησης",
+            "prompt": "Ποιο μέγεθος χρειάζεται πάντα μαζί με τη θέση για περιγραφή της κίνησης;",
+            "options": [
+              "η πίεση",
+              "ο χρόνος",
+              "η πυκνότητα",
+              "η ισχύς"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K2",
+            "sectionKey": "2.1"
+          },
+          {
+            "category": "Ενότητα 2.1: Περιγραφή της κίνησης",
+            "prompt": "Όταν η γη περιφέρεται γύρω από τον ήλιο, αυτό είναι παράδειγμα:",
+            "options": [
+              "κίνησης μόνο στον μικρόκοσμο",
+              "μεταβολής χωρίς κίνηση",
+              "κίνησης ουράνιου σώματος",
+              "ισορροπίας"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K2",
+            "sectionKey": "2.1"
+          },
+          {
+            "category": "Ενότητα 2.1: Περιγραφή της κίνησης",
+            "prompt": "Η κίνηση είναι:",
+            "options": [
+              "χαρακτηριστικό μόνο των ζωντανών οργανισμών",
+              "χαρακτηριστικό μόνο των πλανητών",
+              "γενικό χαρακτηριστικό της ύλης",
+              "ιδιότητα μόνο των υγρών"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K2",
+            "sectionKey": "2.1"
+          }
+        ]
+      },
+      "2.2": {
+        "title": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+        "short": "Ενότητα 2.2",
+        "questions": [
+          {
+            "category": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+            "prompt": "Η ταχύτητα στην καθημερινή γλώσσα δείχνει κυρίως:",
+            "options": [
+              "πόσο βαρύ είναι ένα σώμα",
+              "πόσο γρήγορα κινείται ένα σώμα",
+              "πόσο θερμό είναι ένα σώμα",
+              "πόσο πυκνό είναι ένα σώμα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K2",
+            "sectionKey": "2.2"
+          },
+          {
+            "category": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+            "prompt": "Η μέση ταχύτητα υπολογίζεται από:",
+            "options": [
+              "διαδρομή προς χρόνο",
+              "χρόνο προς διαδρομή",
+              "μάζα προς όγκο",
+              "δύναμη προς επιφάνεια"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K2",
+            "sectionKey": "2.2"
+          },
+          {
+            "category": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+            "prompt": "Αν για την ίδια διαδρομή απαιτείται μικρότερος χρόνος, η μέση ταχύτητα είναι:",
+            "options": [
+              "μικρότερη",
+              "ίδια",
+              "μεγαλύτερη",
+              "μηδενική"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K2",
+            "sectionKey": "2.2"
+          },
+          {
+            "category": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+            "prompt": "Η μονάδα ταχύτητας στο S.I. είναι:",
+            "options": [
+              "m/s",
+              "N",
+              "J",
+              "Pa"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K2",
+            "sectionKey": "2.2"
+          },
+          {
+            "category": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+            "prompt": "Ποια από τις παρακάτω μονάδες χρησιμοποιείται συχνά για ταχύτητα αυτοκινήτου;",
+            "options": [
+              "kg",
+              "km/h",
+              "m²",
+              "L"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K2",
+            "sectionKey": "2.2"
+          },
+          {
+            "category": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+            "prompt": "Τι εκφράζει η διαδρομή;",
+            "options": [
+              "Το συνολικό μήκος της πορείας",
+              "Τη διαφορά μάζας",
+              "Την πίεση στο σώμα",
+              "Το εμβαδόν της τροχιάς"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K2",
+            "sectionKey": "2.2"
+          },
+          {
+            "category": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+            "prompt": "Η ταχύτητα ενός δρομέα που διανύει 100 m σε 10 s είναι:",
+            "options": [
+              "5 m/s",
+              "10 m/s",
+              "50 m/s",
+              "100 m/s"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K2",
+            "sectionKey": "2.2"
+          },
+          {
+            "category": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+            "prompt": "Δύο αυτοκίνητα διανύουν ίση απόσταση. Ταχύτερο είναι εκείνο που:",
+            "options": [
+              "έχει μεγαλύτερη μάζα",
+              "κινείται περισσότερο χρόνο",
+              "τη διανύει σε μικρότερο χρόνο",
+              "έχει μεγαλύτερο όγκο"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K2",
+            "sectionKey": "2.2"
+          },
+          {
+            "category": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+            "prompt": "Η τροχιά ενός κινητού μπορεί να είναι:",
+            "options": [
+              "μόνο ευθεία",
+              "μόνο κυκλική",
+              "ευθεία ή καμπύλη",
+              "μόνο σπειροειδής"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K2",
+            "sectionKey": "2.2"
+          },
+          {
+            "category": "Ενότητα 2.2: Η έννοια της ταχύτητας",
+            "prompt": "Αν ένα σώμα διανύσει 60 m σε 20 s, η μέση ταχύτητά του είναι:",
+            "options": [
+              "2 m/s",
+              "3 m/s",
+              "4 m/s",
+              "5 m/s"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K2",
+            "sectionKey": "2.2"
+          }
+        ]
+      }
+    }
+  },
+  "K3": {
+    "title": "Κεφάλαιο 3 - Δυνάμεις",
+    "short": "Κεφάλαιο 3",
+    "sections": {
+      "3.1": {
+        "title": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+        "short": "Ενότητα 3.1",
+        "questions": [
+          {
+            "category": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+            "prompt": "Πότε λέμε ότι ασκείται δύναμη σε ένα σώμα;",
+            "options": [
+              "Όταν μόνο αλλάζει χρώμα",
+              "Όταν σπρώχνουμε ή τραβάμε το σώμα",
+              "Όταν μετράμε τη μάζα του",
+              "Όταν παρατηρούμε το σώμα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.1"
+          },
+          {
+            "category": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+            "prompt": "Ποιο μπορεί να είναι αποτέλεσμα μιας δύναμης;",
+            "options": [
+              "να αλλάξει μόνο η χημική σύσταση",
+              "να σταματήσει ή να ξεκινήσει η κίνηση",
+              "να εξαφανιστεί η μάζα",
+              "να μη συμβεί τίποτα ποτέ"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.1"
+          },
+          {
+            "category": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+            "prompt": "Μια δύναμη μπορεί επίσης να προκαλέσει:",
+            "options": [
+              "παραμόρφωση σώματος",
+              "αύξηση του χρόνου",
+              "μείωση της μονάδας μέτρησης",
+              "αλλαγή της τροχιάς της γης"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.1"
+          },
+          {
+            "category": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+            "prompt": "Με ποιο όργανο μετράμε δυνάμεις;",
+            "options": [
+              "θερμόμετρο",
+              "δυναμόμετρο",
+              "ζυγό ακριβείας",
+              "μανόμετρο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.1"
+          },
+          {
+            "category": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+            "prompt": "Η μονάδα δύναμης στο S.I. είναι:",
+            "options": [
+              "το joule",
+              "το pascal",
+              "το newton",
+              "το watt"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.1"
+          },
+          {
+            "category": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+            "prompt": "Η δύναμη είναι μέγεθος:",
+            "options": [
+              "μονόμετρο",
+              "διανυσματικό",
+              "χωρίς κατεύθυνση",
+              "ίσο πάντα με τη μάζα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.1"
+          },
+          {
+            "category": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+            "prompt": "Για να περιγράψουμε πλήρως μια δύναμη, χρειαζόμαστε:",
+            "options": [
+              "μόνο το μέτρο της",
+              "μέτρο, κατεύθυνση και φορά",
+              "μόνο τη μάζα του σώματος",
+              "μόνο το χρόνο δράσης"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.1"
+          },
+          {
+            "category": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+            "prompt": "Ποια περίπτωση δείχνει δύναμη από επαφή;",
+            "options": [
+              "Η γη έλκει μια πέτρα",
+              "Ένα χέρι σπρώχνει ένα βιβλίο",
+              "Ένας μαγνήτης έλκει ένα καρφί χωρίς επαφή",
+              "Η σελήνη έλκει τη γη"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.1"
+          },
+          {
+            "category": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+            "prompt": "Ποια περίπτωση δείχνει δύναμη από απόσταση;",
+            "options": [
+              "Το σχοινί τραβά βάρκα",
+              "Το χέρι πιέζει μπάλα",
+              "Η γη έλκει ένα σώμα",
+              "Το έδαφος σπρώχνει παπούτσι"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.1"
+          },
+          {
+            "category": "Ενότητα 3.1: Η έννοια «Δύναμη»",
+            "prompt": "Όταν μια μπάλα που κινείται σταματά επειδή χτυπά στο έδαφος, αυτό δείχνει ότι η δύναμη μπορεί:",
+            "options": [
+              "να αλλάζει την κίνηση",
+              "να αλλάζει τη μάζα",
+              "να καταργεί το χρόνο",
+              "να δημιουργεί πάντα θερμότητα μόνο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.1"
+          }
+        ]
+      },
+      "3.2": {
+        "title": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+        "short": "Ενότητα 3.2",
+        "questions": [
+          {
+            "category": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+            "prompt": "Οι δύο σημαντικές δυνάμεις που παρουσιάζονται στην υποενότητα είναι:",
+            "options": [
+              "βάρος και τριβή",
+              "πίεση και ισχύς",
+              "θερμότητα και ενέργεια",
+              "όγκος και μάζα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.2"
+          },
+          {
+            "category": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+            "prompt": "Το βάρος ενός σώματος είναι:",
+            "options": [
+              "η μάζα του σώματος",
+              "η βαρυτική δύναμη που ασκεί η γη στο σώμα",
+              "η τριβή που ασκεί το έδαφος",
+              "η πίεση που ασκεί ο αέρας"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.2"
+          },
+          {
+            "category": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+            "prompt": "Η κατεύθυνση του βάρους κοντά στην επιφάνεια της γης είναι:",
+            "options": [
+              "οριζόντια",
+              "προς τα πάνω",
+              "κατακόρυφη προς τα κάτω",
+              "κυκλική"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.2"
+          },
+          {
+            "category": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+            "prompt": "Η τριβή είναι δύναμη που:",
+            "options": [
+              "ευνοεί πάντα την κίνηση",
+              "αντιστέκεται στην κίνηση ή στην τάση για κίνηση",
+              "δεν εμφανίζεται ποτέ στην καθημερινή ζωή",
+              "είναι ίδια με το βάρος"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.2"
+          },
+          {
+            "category": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+            "prompt": "Η τριβή μεταξύ παπουτσιού και εδάφους μάς βοηθά:",
+            "options": [
+              "να γλιστράμε πιο εύκολα",
+              "να περπατάμε",
+              "να χάνουμε μάζα",
+              "να μειώνουμε το βάρος μας"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.2"
+          },
+          {
+            "category": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+            "prompt": "Όταν σπρώχνουμε ένα βιβλίο και αυτό τελικά σταματά, η αιτία είναι κυρίως:",
+            "options": [
+              "η άνωση",
+              "η βαρυτική έλξη του ήλιου",
+              "η τριβή",
+              "η αδράνεια μόνο"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.2"
+          },
+          {
+            "category": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+            "prompt": "Αν μεταφέρουμε ένα σώμα στη σελήνη, το βάρος του:",
+            "options": [
+              "παραμένει ακριβώς ίδιο",
+              "μηδενίζεται πάντα",
+              "γίνεται μικρότερο",
+              "γίνεται μεγαλύτερο"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.2"
+          },
+          {
+            "category": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+            "prompt": "Η μάζα ενός σώματος στη σελήνη:",
+            "options": [
+              "γίνεται μικρότερη",
+              "γίνεται μεγαλύτερη",
+              "παραμένει ίδια",
+              "μηδενίζεται"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.2"
+          },
+          {
+            "category": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+            "prompt": "Το δυναμόμετρο μετρά:",
+            "options": [
+              "μάζα",
+              "βάρος ως δύναμη",
+              "όγκο",
+              "θερμοκρασία"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.2"
+          },
+          {
+            "category": "Ενότητα 3.2: Δύο σημαντικές δυνάμεις στον κόσμο",
+            "prompt": "Η τριβή έχει διπλό ρόλο γιατί:",
+            "options": [
+              "άλλοτε βοηθά και άλλοτε δυσκολεύει την κίνηση",
+              "είναι άλλοτε βάρος και άλλοτε πίεση",
+              "εμφανίζεται μόνο στα στερεά",
+              "μετριέται μόνο σε χιλιόμετρα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.2"
+          }
+        ]
+      },
+      "3.3": {
+        "title": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+        "short": "Ενότητα 3.3",
+        "questions": [
+          {
+            "category": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+            "prompt": "Τι ονομάζουμε συνισταμένη δυνάμεων;",
+            "options": [
+              "Τη μικρότερη από όλες τις δυνάμεις",
+              "Μια δύναμη που έχει το ίδιο αποτέλεσμα με όλες μαζί",
+              "Τη δύναμη της τριβής μόνο",
+              "Τη δύναμη του βάρους μόνο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.3"
+          },
+          {
+            "category": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+            "prompt": "Αν δύο δυνάμεις ασκούνται στην ίδια ευθεία και με ίδια φορά, η συνισταμένη τους έχει μέτρο:",
+            "options": [
+              "τη διαφορά τους",
+              "το άθροισμά τους",
+              "μηδέν",
+              "το μισό του αθροίσματος"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.3"
+          },
+          {
+            "category": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+            "prompt": "Αν δύο δυνάμεις ασκούνται στην ίδια ευθεία και με αντίθετες φορές, η συνισταμένη τους έχει μέτρο:",
+            "options": [
+              "το άθροισμά τους",
+              "το γινόμενό τους",
+              "τη διαφορά των μέτρων τους",
+              "πάντα μηδέν"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.3"
+          },
+          {
+            "category": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+            "prompt": "Δύο αντίθετες δυνάμεις 8 N και 3 N έχουν συνισταμένη:",
+            "options": [
+              "11 N προς τη φορά της 8 N",
+              "5 N προς τη φορά της 8 N",
+              "5 N προς τη φορά της 3 N",
+              "24 N"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.3"
+          },
+          {
+            "category": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+            "prompt": "Αν δύο αντίθετες δυνάμεις έχουν ίσα μέτρα, η συνισταμένη είναι:",
+            "options": [
+              "ίση με καθεμία από αυτές",
+              "διπλάσια",
+              "μηδέν",
+              "αδύνατο να βρεθεί"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.3"
+          },
+          {
+            "category": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+            "prompt": "Όταν τρεις μαθητές τραβούν έναν κρίκο με σκοινιά, η κίνηση του κρίκου εξαρτάται από:",
+            "options": [
+              "τη συνισταμένη των δυνάμεων",
+              "μόνο από τον ισχυρότερο μαθητή",
+              "μόνο από τον χρόνο",
+              "μόνο από τη μάζα του κρίκου"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.3"
+          },
+          {
+            "category": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+            "prompt": "Η σύνθεση δυνάμεων μας βοηθά να:",
+            "options": [
+              "αντικαθιστούμε πολλές δυνάμεις με μία ισοδύναμη",
+              "μετράμε τη θερμοκρασία",
+              "βρίσκουμε τον όγκο ενός σώματος",
+              "υπολογίζουμε μόνο τη μάζα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.3"
+          },
+          {
+            "category": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+            "prompt": "Αν δύο δυνάμεις έχουν ίδια κατεύθυνση αλλά αντίθετη φορά, η συνισταμένη έχει φορά:",
+            "options": [
+              "τυχαία",
+              "της μεγαλύτερης δύναμης",
+              "της μικρότερης δύναμης",
+              "πάντα προς τα πάνω"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.3"
+          },
+          {
+            "category": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+            "prompt": "Η ανάλυση μιας δύναμης σημαίνει:",
+            "options": [
+              "τη διάσπασή της σε άλλες απλούστερες δυνάμεις",
+              "την εξαφάνισή της",
+              "τη μέτρησή της με θερμόμετρο",
+              "τη μετατροπή της σε πίεση"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.3"
+          },
+          {
+            "category": "Ενότητα 3.3: Σύνθεση και ανάλυση δυνάμεων",
+            "prompt": "Αν μια συνισταμένη είναι μηδέν, τότε οι δυνάμεις που δρουν:",
+            "options": [
+              "δεν υπάρχουν",
+              "έχουν αθροιστικά μηδενικό αποτέλεσμα",
+              "είναι όλες ίσες με 1 N",
+              "είναι όλες κατακόρυφες"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.3"
+          }
+        ]
+      },
+      "3.4": {
+        "title": "Ενότητα 3.4: Δύναμη και ισορροπία",
+        "short": "Ενότητα 3.4",
+        "questions": [
+          {
+            "category": "Ενότητα 3.4: Δύναμη και ισορροπία",
+            "prompt": "Πότε ένα σώμα ισορροπεί;",
+            "options": [
+              "Όταν κινείται μόνο κυκλικά",
+              "Όταν η συνισταμένη των δυνάμεων είναι μηδέν",
+              "Όταν ασκείται μόνο μία δύναμη",
+              "Όταν αυξάνει η μάζα του"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.4"
+          },
+          {
+            "category": "Ενότητα 3.4: Δύναμη και ισορροπία",
+            "prompt": "Ένα σώμα μπορεί να ισορροπεί και να είναι:",
+            "options": [
+              "μόνο ακίνητο",
+              "μόνο θερμό",
+              "ακίνητο ή να κινείται με σταθερή ταχύτητα",
+              "μόνο σε πτώση"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.4"
+          },
+          {
+            "category": "Ενότητα 3.4: Δύναμη και ισορροπία",
+            "prompt": "Η αδράνεια είναι:",
+            "options": [
+              "η τάση των σωμάτων να αντιστέκονται σε μεταβολή της ταχύτητάς τους",
+              "η τάση των σωμάτων να θερμαίνονται",
+              "η δύναμη που μετρά το δυναμόμετρο",
+              "η πίεση του αέρα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.4"
+          },
+          {
+            "category": "Ενότητα 3.4: Δύναμη και ισορροπία",
+            "prompt": "Ο πρώτος νόμος του Νεύτωνα συνδέεται με:",
+            "options": [
+              "τη διατήρηση της ενέργειας",
+              "την ισορροπία και την αδράνεια",
+              "την άνωση",
+              "την ειδική θερμότητα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.4"
+          },
+          {
+            "category": "Ενότητα 3.4: Δύναμη και ισορροπία",
+            "prompt": "Όταν ένα σώμα συνεχίζει να κινείται χωρίς να αλλάζει ταχύτητα, αυτό δείχνει ότι:",
+            "options": [
+              "η συνισταμένη μπορεί να είναι μηδέν",
+              "ασκείται πάντα μεγάλη δύναμη",
+              "δεν έχει μάζα",
+              "δεν υπάρχει τριβή"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.4"
+          },
+          {
+            "category": "Ενότητα 3.4: Δύναμη και ισορροπία",
+            "prompt": "Σε ένα τραπέζι ακουμπά ένα βιβλίο ακίνητο. Αυτό σημαίνει ότι:",
+            "options": [
+              "δεν δρουν δυνάμεις",
+              "το βάρος του εξισορροπείται από άλλη δύναμη",
+              "η μάζα του είναι μηδέν",
+              "η πίεση είναι μηδέν"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.4"
+          },
+          {
+            "category": "Ενότητα 3.4: Δύναμη και ισορροπία",
+            "prompt": "Η τριβή σε μια οριζόντια κίνηση συνήθως:",
+            "options": [
+              "βοηθά την ισορροπία επειδή μπορεί να εξισορροπεί άλλη δύναμη",
+              "αυξάνει τη μάζα",
+              "είναι πάντα μηδέν",
+              "δεν έχει κατεύθυνση"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.4"
+          },
+          {
+            "category": "Ενότητα 3.4: Δύναμη και ισορροπία",
+            "prompt": "Αν σε ένα σώμα ασκούνται δύο αντίθετες ίσες δυνάμεις, τότε:",
+            "options": [
+              "η συνισταμένη είναι ίση με καθεμία",
+              "η συνισταμένη είναι μηδέν",
+              "το σώμα πρέπει να κινείται γρηγορότερα",
+              "η πίεση αυξάνεται"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.4"
+          },
+          {
+            "category": "Ενότητα 3.4: Δύναμη και ισορροπία",
+            "prompt": "Η αδράνεια είναι ιδιότητα:",
+            "options": [
+              "της ενέργειας",
+              "της ύλης",
+              "του χρόνου",
+              "της θερμοκρασίας"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.4"
+          },
+          {
+            "category": "Ενότητα 3.4: Δύναμη και ισορροπία",
+            "prompt": "Σε λεία επιφάνεια με πολύ μικρή τριβή, ένα σώμα που κινείται τείνει να:",
+            "options": [
+              "σταματήσει αμέσως",
+              "συνεχίσει την κίνησή του σχεδόν αμετάβλητο",
+              "επιστρέψει μόνο του στην αρχή",
+              "αυξήσει τη μάζα του"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.4"
+          }
+        ]
+      },
+      "3.5": {
+        "title": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+        "short": "Ενότητα 3.5",
+        "questions": [
+          {
+            "category": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+            "prompt": "Υλικό σημείο θεωρούμε ένα σώμα όταν:",
+            "options": [
+              "μας ενδιαφέρει μόνο η θέση και η κίνησή του",
+              "έχει σχήμα κύβου",
+              "έχει πολύ μεγάλη μάζα",
+              "είναι πάντα ακίνητο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.5"
+          },
+          {
+            "category": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+            "prompt": "Συνθήκη ισορροπίας υλικού σημείου είναι:",
+            "options": [
+              "ΣF = 0",
+              "ΣF = 1",
+              "Σp = 0",
+              "ΣE = 0"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.5"
+          },
+          {
+            "category": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+            "prompt": "Αν ένα υλικό σημείο είναι ακίνητο, τότε:",
+            "options": [
+              "οπωσδήποτε δεν ασκείται καμία δύναμη",
+              "η συνισταμένη των δυνάμεων είναι μηδέν",
+              "δεν έχει βάρος",
+              "δεν έχει μάζα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.5"
+          },
+          {
+            "category": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+            "prompt": "Ένα σώμα που κινείται με σταθερή ταχύτητα σε ευθεία μπορεί να θεωρηθεί ότι:",
+            "options": [
+              "δεν ισορροπεί",
+              "ισορροπεί δυναμικά",
+              "έχει μηδενική μάζα",
+              "έχει μηδενική μετατόπιση"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.5"
+          },
+          {
+            "category": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+            "prompt": "Ακίνητο σώμα κρεμασμένο από νήμα ισορροπεί όταν:",
+            "options": [
+              "το βάρος και η τάση έχουν ίσα μέτρα και αντίθετες φορές",
+              "το βάρος είναι μηδέν",
+              "η τάση είναι μεγαλύτερη από το βάρος",
+              "δεν υπάρχει γη"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.5"
+          },
+          {
+            "category": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+            "prompt": "Αν η συνισταμένη σε ένα υλικό σημείο πάψει να είναι μηδέν, τότε:",
+            "options": [
+              "δεν αλλάζει τίποτα",
+              "μπορεί να μεταβληθεί η ταχύτητά του",
+              "μηδενίζεται η μάζα",
+              "παύει να υπάρχει χρόνος"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.5"
+          },
+          {
+            "category": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+            "prompt": "Παράδειγμα ισορροπίας υλικού σημείου είναι:",
+            "options": [
+              "μια πέτρα που πέφτει ελεύθερα",
+              "ένα βιβλίο ακίνητο πάνω σε θρανίο",
+              "μια μπάλα που επιταχύνεται",
+              "ένα αυτοκίνητο που ξεκινά"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.5"
+          },
+          {
+            "category": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+            "prompt": "Όταν λέμε ότι η συνισταμένη είναι μηδέν, εννοούμε ότι:",
+            "options": [
+              "καμία δύναμη δεν ασκείται",
+              "οι δυνάμεις αλληλοαναιρούνται",
+              "η πίεση είναι μηδέν",
+              "η θερμοκρασία μένει σταθερή"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.5"
+          },
+          {
+            "category": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+            "prompt": "Η ισορροπία ενός υλικού σημείου συνδέεται άμεσα με:",
+            "options": [
+              "τη συνισταμένη των δυνάμεων",
+              "το χρώμα του σώματος",
+              "τη χημική σύσταση μόνο",
+              "το εμβαδόν του"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.5"
+          },
+          {
+            "category": "Ενότητα 3.5: Ισορροπία υλικού σημείου",
+            "prompt": "Σε υλικό σημείο, για την κίνηση με σταθερή ταχύτητα ισχύει ότι:",
+            "options": [
+              "η συνισταμένη είναι μηδέν",
+              "το βάρος μηδενίζεται",
+              "η τριβή είναι πάντα μηδέν",
+              "δεν υπάρχει μετατόπιση"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.5"
+          }
+        ]
+      },
+      "3.6": {
+        "title": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+        "short": "Ενότητα 3.6",
+        "questions": [
+          {
+            "category": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+            "prompt": "Μια δύναμη μπορεί να αλλάξει:",
+            "options": [
+              "μόνο τη μάζα ενός σώματος",
+              "την ταχύτητα ενός σώματος",
+              "μόνο το χρώμα του",
+              "μόνο τη θερμοκρασία του"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.6"
+          },
+          {
+            "category": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+            "prompt": "Αν αυξηθεί η συνισταμένη δύναμη που ασκείται στο ίδιο σώμα για τον ίδιο χρόνο, η μεταβολή της ταχύτητας:",
+            "options": [
+              "μειώνεται",
+              "παραμένει ίδια",
+              "αυξάνεται",
+              "μηδενίζεται"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.6"
+          },
+          {
+            "category": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+            "prompt": "Για την ίδια δύναμη και τον ίδιο χρόνο, μεγαλύτερη μεταβολή ταχύτητας θα έχει:",
+            "options": [
+              "το σώμα με μεγαλύτερη μάζα",
+              "το σώμα με μικρότερη μάζα",
+              "και τα δύο την ίδια",
+              "κανένα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.6"
+          },
+          {
+            "category": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+            "prompt": "Η μάζα είναι μέτρο:",
+            "options": [
+              "της πίεσης",
+              "της αδράνειας",
+              "της ισχύος",
+              "της θερμοκρασίας"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.6"
+          },
+          {
+            "category": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+            "prompt": "Το ίδιο χτύπημα αλλάζει περισσότερο την ταχύτητα:",
+            "options": [
+              "μιας μπάλας μπάσκετ από μιας μπάλας πινγκ πονγκ",
+              "μιας μπάλας πινγκ πονγκ από μιας μπάλας μπάσκετ",
+              "και των δύο το ίδιο",
+              "μόνο αν έχουν ίδιο χρώμα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.6"
+          },
+          {
+            "category": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+            "prompt": "Αν μια δύναμη ασκείται για μεγαλύτερο χρονικό διάστημα, συνήθως η μεταβολή της ταχύτητας:",
+            "options": [
+              "γίνεται μικρότερη",
+              "μένει πάντα μηδέν",
+              "γίνεται μεγαλύτερη",
+              "δεν εξαρτάται καθόλου από το χρόνο"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.6"
+          },
+          {
+            "category": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+            "prompt": "Όσο μεγαλύτερη είναι η μάζα ενός σώματος:",
+            "options": [
+              "τόσο ευκολότερα αλλάζει η ταχύτητά του",
+              "τόσο δυσκολότερα αλλάζει η ταχύτητά του",
+              "τόσο μικρότερο είναι το βάρος του",
+              "τόσο μικρότερη είναι πάντα η τριβή"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.6"
+          },
+          {
+            "category": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+            "prompt": "Ποιο από τα παρακάτω είναι σωστό;",
+            "options": [
+              "Η δύναμη δεν σχετίζεται με τη μεταβολή της ταχύτητας",
+              "Η ίδια δύναμη δρα το ίδιο σε όλα τα σώματα ανεξάρτητα από τη μάζα",
+              "Η μεταβολή της ταχύτητας εξαρτάται και από τη μάζα",
+              "Η μάζα μετριέται σε N"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.6"
+          },
+          {
+            "category": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+            "prompt": "Όταν ένας ποδοσφαιριστής κλοτσά μπάλα, η δύναμη μπορεί να μεταβάλει:",
+            "options": [
+              "τη διεύθυνση ή το μέτρο της ταχύτητας",
+              "μόνο το χρώμα της μπάλας",
+              "μόνο την πίεση του αέρα",
+              "μόνο τη θερμοκρασία του εδάφους"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.6"
+          },
+          {
+            "category": "Ενότητα 3.6: Δύναμη και μεταβολή της ταχύτητας",
+            "prompt": "Η υποενότητα δείχνει ότι η μεταβολή της ταχύτητας εξαρτάται κυρίως από:",
+            "options": [
+              "δύναμη, μάζα και χρόνο δράσης",
+              "όγκο, πίεση και χρώμα",
+              "εμβαδόν, μήκος και ύψος",
+              "μόνο από τη θερμοκρασία"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.6"
+          }
+        ]
+      },
+      "3.7": {
+        "title": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+        "short": "Ενότητα 3.7",
+        "questions": [
+          {
+            "category": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+            "prompt": "Όταν ένα σώμα ασκεί δύναμη σε ένα άλλο, τότε:",
+            "options": [
+              "μόνο το πρώτο δέχεται δύναμη",
+              "μόνο το δεύτερο δέχεται δύναμη",
+              "και το δεύτερο ασκεί δύναμη στο πρώτο",
+              "οι δυνάμεις εξαφανίζονται"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.7"
+          },
+          {
+            "category": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+            "prompt": "Ο τρίτος νόμος του Νεύτωνα είναι γνωστός ως:",
+            "options": [
+              "νόμος της αδράνειας",
+              "νόμος δράσης - αντίδρασης",
+              "νόμος της πίεσης",
+              "νόμος της ισχύος"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.7"
+          },
+          {
+            "category": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+            "prompt": "Οι δυνάμεις δράσης και αντίδρασης έχουν:",
+            "options": [
+              "ίσο μέτρο και ίδια φορά",
+              "ίσο μέτρο και αντίθετη φορά",
+              "διαφορετικό μέτρο και ίδια φορά",
+              "μηδενικό μέτρο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.7"
+          },
+          {
+            "category": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+            "prompt": "Οι δυνάμεις δράσης και αντίδρασης ασκούνται:",
+            "options": [
+              "στο ίδιο σώμα",
+              "σε διαφορετικά σώματα",
+              "μόνο σε ακίνητα σώματα",
+              "μόνο σε υγρά"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.7"
+          },
+          {
+            "category": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+            "prompt": "Όταν σπρώχνεις έναν τοίχο, ο τοίχος:",
+            "options": [
+              "δεν ασκεί δύναμη σε σένα",
+              "ασκεί μικρότερη δύναμη",
+              "ασκεί ίση και αντίθετη δύναμη",
+              "μετατρέπεται σε πίεση"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.7"
+          },
+          {
+            "category": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+            "prompt": "Το παράδειγμα με τα κουπιά της βάρκας δείχνει ότι:",
+            "options": [
+              "μόνο το νερό δέχεται δύναμη",
+              "μόνο τα κουπιά δέχονται δύναμη",
+              "κουπιά και νερό αλληλεπιδρούν με ίσες και αντίθετες δυνάμεις",
+              "η δράση είναι πάντα μεγαλύτερη από την αντίδραση"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.7"
+          },
+          {
+            "category": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+            "prompt": "Δράση χωρίς αντίδραση στη φύση:",
+            "options": [
+              "υπάρχει συχνά",
+              "δεν υπάρχει",
+              "υπάρχει μόνο στο διάστημα",
+              "υπάρχει μόνο σε υγρά"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.7"
+          },
+          {
+            "category": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+            "prompt": "Όταν κλοτσάμε μια μπάλα και πονά το πόδι μας, αυτό δείχνει:",
+            "options": [
+              "μόνο την τριβή",
+              "μόνο το βάρος",
+              "την αντίδραση της μπάλας στο πόδι",
+              "την απουσία δύναμης"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K3",
+            "sectionKey": "3.7"
+          },
+          {
+            "category": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+            "prompt": "Οι δυνάμεις δράσης - αντίδρασης:",
+            "options": [
+              "αλληλοαναιρούνται πάντα γιατί δρουν στο ίδιο σώμα",
+              "δεν αλληλοαναιρούνται γιατί δρουν σε διαφορετικά σώματα",
+              "υπάρχουν μόνο όταν τα σώματα είναι ακίνητα",
+              "μετριούνται σε kg"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K3",
+            "sectionKey": "3.7"
+          },
+          {
+            "category": "Ενότητα 3.7: Δύναμη και αλληλεπίδραση",
+            "prompt": "Η έννοια της αλληλεπίδρασης δείχνει ότι:",
+            "options": [
+              "καμία δύναμη δεν εμφανίζεται μόνη της",
+              "μόνο τα ζωντανά σώματα αλληλεπιδρούν",
+              "η βαρύτητα δεν είναι δύναμη",
+              "η τριβή δεν είναι αλληλεπίδραση"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K3",
+            "sectionKey": "3.7"
+          }
+        ]
+      }
+    }
+  },
+  "K4": {
+    "title": "Κεφάλαιο 4 - Πίεση",
+    "short": "Κεφάλαιο 4",
+    "sections": {
+      "4.1": {
+        "title": "Ενότητα 4.1: Πίεση",
+        "short": "Ενότητα 4.1",
+        "questions": [
+          {
+            "category": "Ενότητα 4.1: Πίεση",
+            "prompt": "Η πίεση ορίζεται ως:",
+            "options": [
+              "το γινόμενο δύναμης και επιφάνειας",
+              "το πηλίκο της κάθετης δύναμης προς την επιφάνεια",
+              "το άθροισμα βάρους και επιφάνειας",
+              "το πηλίκο μάζας προς όγκο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.1"
+          },
+          {
+            "category": "Ενότητα 4.1: Πίεση",
+            "prompt": "Αν η ίδια δύναμη ασκηθεί σε μεγαλύτερη επιφάνεια, η πίεση:",
+            "options": [
+              "αυξάνεται",
+              "μειώνεται",
+              "μένει ίδια",
+              "μηδενίζεται πάντα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.1"
+          },
+          {
+            "category": "Ενότητα 4.1: Πίεση",
+            "prompt": "Γιατί τα χιονοπέδιλα βοηθούν τον χιονοδρόμο να μη βουλιάζει;",
+            "options": [
+              "Αυξάνουν το βάρος του",
+              "Μειώνουν την πίεση αυξάνοντας την επιφάνεια",
+              "Μηδενίζουν τη βαρύτητα",
+              "Μειώνουν τη μάζα του"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.1"
+          },
+          {
+            "category": "Ενότητα 4.1: Πίεση",
+            "prompt": "Η μονάδα πίεσης στο S.I. είναι:",
+            "options": [
+              "το newton",
+              "το joule",
+              "το pascal",
+              "το watt"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.1"
+          },
+          {
+            "category": "Ενότητα 4.1: Πίεση",
+            "prompt": "1 Pa αντιστοιχεί σε:",
+            "options": [
+              "1 N/m²",
+              "1 kg/m³",
+              "1 J/s",
+              "1 N·m"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.1"
+          },
+          {
+            "category": "Ενότητα 4.1: Πίεση",
+            "prompt": "Η πίεση εξαρτάται από:",
+            "options": [
+              "τη δύναμη και το εμβαδόν της επιφάνειας",
+              "μόνο τη μάζα",
+              "μόνο τον χρόνο",
+              "τη θερμοκρασία και τον όγκο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.1"
+          },
+          {
+            "category": "Ενότητα 4.1: Πίεση",
+            "prompt": "Ποιο ασκεί μεγαλύτερη πίεση στο έδαφος, αν το βάρος είναι ίδιο;",
+            "options": [
+              "παπούτσι με μικρότερη επιφάνεια",
+              "παπούτσι με μεγαλύτερη επιφάνεια",
+              "και τα δύο ίδια",
+              "εξαρτάται μόνο από το χρώμα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.1"
+          },
+          {
+            "category": "Ενότητα 4.1: Πίεση",
+            "prompt": "Η πίεση είναι φυσικό μέγεθος:",
+            "options": [
+              "διανυσματικό",
+              "μονόμετρο",
+              "μηδενικό σε κάθε περίπτωση",
+              "ίσο με τη μάζα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.1"
+          },
+          {
+            "category": "Ενότητα 4.1: Πίεση",
+            "prompt": "Οι φαρδιοί τροχοί ή τα φαρδιά λάστιχα χρησιμοποιούνται όταν θέλουμε:",
+            "options": [
+              "μεγαλύτερη πίεση",
+              "μικρότερη πίεση",
+              "μεγαλύτερη μάζα",
+              "μεγαλύτερη ισχύ"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.1"
+          },
+          {
+            "category": "Ενότητα 4.1: Πίεση",
+            "prompt": "Η δύναμη για τον υπολογισμό της πίεσης πρέπει να είναι:",
+            "options": [
+              "παράλληλη στην επιφάνεια",
+              "κάθετη στην επιφάνεια",
+              "οπωσδήποτε ανοδική",
+              "πάντα τριβή"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.1"
+          }
+        ]
+      },
+      "4.2": {
+        "title": "Ενότητα 4.2: Υδροστατική πίεση",
+        "short": "Ενότητα 4.2",
+        "questions": [
+          {
+            "category": "Ενότητα 4.2: Υδροστατική πίεση",
+            "prompt": "Η υδροστατική πίεση οφείλεται:",
+            "options": [
+              "στην τριβή του νερού",
+              "στη βαρύτητα και στο βάρος του υγρού",
+              "στη θερμοκρασία μόνο",
+              "στην άνωση"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.2"
+          },
+          {
+            "category": "Ενότητα 4.2: Υδροστατική πίεση",
+            "prompt": "Η υδροστατική πίεση σε ένα υγρό αυξάνεται όταν:",
+            "options": [
+              "μειώνεται το βάθος",
+              "αυξάνεται το βάθος",
+              "μειώνεται το ύψος της στήλης υγρού",
+              "μηδενίζεται η επιφάνεια"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.2"
+          },
+          {
+            "category": "Ενότητα 4.2: Υδροστατική πίεση",
+            "prompt": "Σε σημεία του ίδιου υγρού που βρίσκονται στο ίδιο βάθος, η υδροστατική πίεση είναι:",
+            "options": [
+              "διαφορετική",
+              "μεγαλύτερη στο στενότερο δοχείο",
+              "ίδια",
+              "πάντα μηδέν"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.2"
+          },
+          {
+            "category": "Ενότητα 4.2: Υδροστατική πίεση",
+            "prompt": "Η υδροστατική πίεση εξαρτάται και από:",
+            "options": [
+              "την πυκνότητα του υγρού",
+              "μόνο το χρώμα του υγρού",
+              "τη μάζα του δοχείου",
+              "το υλικό του πυθμένα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.2"
+          },
+          {
+            "category": "Ενότητα 4.2: Υδροστατική πίεση",
+            "prompt": "Σε ποιο υγρό, στο ίδιο βάθος, είναι μεγαλύτερη η υδροστατική πίεση;",
+            "options": [
+              "σε αυτό με μικρότερη πυκνότητα",
+              "σε αυτό με μεγαλύτερη πυκνότητα",
+              "είναι πάντα ίδια",
+              "εξαρτάται μόνο από το σχήμα του δοχείου"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.2"
+          },
+          {
+            "category": "Ενότητα 4.2: Υδροστατική πίεση",
+            "prompt": "Η υδροστατική πίεση μετριέται με:",
+            "options": [
+              "δυναμόμετρο",
+              "βαρόμετρο",
+              "μανόμετρο",
+              "θερμόμετρο"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.2"
+          },
+          {
+            "category": "Ενότητα 4.2: Υδροστατική πίεση",
+            "prompt": "Το σχήμα του δοχείου επηρεάζει την υδροστατική πίεση στο ίδιο βάθος;",
+            "options": [
+              "Ναι, πάντα",
+              "Όχι, όχι στο ίδιο βάθος του ίδιου υγρού",
+              "Μόνο στα μεταλλικά δοχεία",
+              "Μόνο όταν το υγρό είναι νερό"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.2"
+          },
+          {
+            "category": "Ενότητα 4.2: Υδροστατική πίεση",
+            "prompt": "Αν πάμε από τη γη στη σελήνη με κλειστό δοχείο νερού, η υδροστατική πίεση στον πυθμένα:",
+            "options": [
+              "θα αυξηθεί",
+              "θα παραμείνει ίδια",
+              "θα μειωθεί",
+              "θα γίνει αρνητική"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.2"
+          },
+          {
+            "category": "Ενότητα 4.2: Υδροστατική πίεση",
+            "prompt": "Η υδροστατική πίεση είναι ένα είδος:",
+            "options": [
+              "πίεσης σε ακίνητο υγρό",
+              "τριβής",
+              "δυναμικής ενέργειας",
+              "ισχύος"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.2"
+          },
+          {
+            "category": "Ενότητα 4.2: Υδροστατική πίεση",
+            "prompt": "Ο δύτης αισθάνεται μεγαλύτερη πίεση στα αυτιά του όταν:",
+            "options": [
+              "κολυμπά κοντά στην επιφάνεια",
+              "κατεβαίνει βαθύτερα",
+              "βγαίνει έξω από το νερό",
+              "μένει ακίνητος στην ξηρά"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.2"
+          }
+        ]
+      },
+      "4.3": {
+        "title": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+        "short": "Ενότητα 4.3",
+        "questions": [
+          {
+            "category": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+            "prompt": "Η ατμοσφαιρική πίεση οφείλεται:",
+            "options": [
+              "στο χρώμα του αέρα",
+              "στο βάρος του ατμοσφαιρικού αέρα",
+              "στη θερμότητα του ήλιου μόνο",
+              "στην τριβή του ανέμου"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.3"
+          },
+          {
+            "category": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+            "prompt": "Ο αέρας της ατμόσφαιρας:",
+            "options": [
+              "δεν έχει μάζα",
+              "έχει μάζα και ασκεί πίεση",
+              "δεν ασκεί καμία δύναμη",
+              "είναι μόνο κενό"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.3"
+          },
+          {
+            "category": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+            "prompt": "Η ατμοσφαιρική πίεση είναι μεγαλύτερη:",
+            "options": [
+              "στις υψηλές κορυφές",
+              "στην επιφάνεια της θάλασσας",
+              "στο διάστημα",
+              "στο ίδιο σε όλα τα ύψη"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.3"
+          },
+          {
+            "category": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+            "prompt": "Καθώς ανεβαίνουμε σε μεγάλο υψόμετρο, η ατμοσφαιρική πίεση:",
+            "options": [
+              "αυξάνεται",
+              "μειώνεται",
+              "μένει ίδια",
+              "γίνεται ίση με το βάρος"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.3"
+          },
+          {
+            "category": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+            "prompt": "Με ποιο όργανο μετράμε την ατμοσφαιρική πίεση;",
+            "options": [
+              "βαρόμετρο",
+              "θερμόμετρο",
+              "μανόμετρο",
+              "δυναμόμετρο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.3"
+          },
+          {
+            "category": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+            "prompt": "Η βεντούζα κολλά στον τοίχο κυρίως λόγω:",
+            "options": [
+              "της άνωσης",
+              "της ατμοσφαιρικής πίεσης",
+              "της δυναμικής ενέργειας",
+              "της τριβής μόνο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.3"
+          },
+          {
+            "category": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+            "prompt": "Όταν πίνουμε με καλαμάκι, το υγρό ανεβαίνει επειδή:",
+            "options": [
+              "έχει μικρό βάρος",
+              "η ατμοσφαιρική πίεση βοηθά να σπρωχτεί προς τα πάνω",
+              "μηδενίζεται η βαρύτητα",
+              "το υγρό αποκτά άνωση"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.3"
+          },
+          {
+            "category": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+            "prompt": "Σε ένα βουνό το βρασμό του νερού επηρεάζει και το γεγονός ότι η ατμοσφαιρική πίεση είναι:",
+            "options": [
+              "μεγαλύτερη",
+              "ίδια με της θάλασσας",
+              "μικρότερη",
+              "μηδενική"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.3"
+          },
+          {
+            "category": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+            "prompt": "Η ατμοσφαιρική πίεση ασκείται:",
+            "options": [
+              "μόνο προς τα κάτω",
+              "σε κάθε επιφάνεια που βρίσκεται μέσα στον αέρα",
+              "μόνο στα υγρά",
+              "μόνο στα αέρια"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.3"
+          },
+          {
+            "category": "Ενότητα 4.3: Ατμοσφαιρική πίεση",
+            "prompt": "Αρτεσιανό πηγάδι σχετίζεται με:",
+            "options": [
+              "την ανυψωτική ικανότητα της ατμόσφαιρας",
+              "τη θερμική διαστολή",
+              "τη διατήρηση της ενέργειας",
+              "την ισχύ"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.3"
+          }
+        ]
+      },
+      "4.4": {
+        "title": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+        "short": "Ενότητα 4.4",
+        "questions": [
+          {
+            "category": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+            "prompt": "Η αρχή του Πασκάλ ισχύει για:",
+            "options": [
+              "στερεά σώματα",
+              "περιορισμένα ακίνητα ρευστά",
+              "μόνο για αέρια",
+              "μόνο για κίνηση χωρίς τριβή"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.4"
+          },
+          {
+            "category": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+            "prompt": "Σύμφωνα με την αρχή του Πασκάλ, μια μεταβολή πίεσης σε ένα σημείο ρευστού:",
+            "options": [
+              "μένει μόνο εκεί",
+              "μεταδίδεται εξίσου σε όλα τα σημεία του ρευστού",
+              "χάνεται αμέσως",
+              "μετατρέπεται σε βάρος"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.4"
+          },
+          {
+            "category": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+            "prompt": "Η υδραυλική αντλία λειτουργεί με βάση:",
+            "options": [
+              "την άνωση",
+              "την ατμοσφαιρική πίεση μόνο",
+              "την αρχή του Πασκάλ",
+              "τον πρώτο νόμο του Νεύτωνα"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.4"
+          },
+          {
+            "category": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+            "prompt": "Σε μια υδραυλική διάταξη η πίεση στα δύο έμβολα θεωρείται:",
+            "options": [
+              "ίδια",
+              "πάντα διπλάσια στο μικρό έμβολο",
+              "πάντα μηδενική",
+              "ίση με το βάρος μόνο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.4"
+          },
+          {
+            "category": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+            "prompt": "Σε υδραυλικό πιεστήριο, η δύναμη στο μεγάλο έμβολο μπορεί να είναι μεγαλύτερη όταν:",
+            "options": [
+              "το εμβαδόν του είναι μεγαλύτερο",
+              "το εμβαδόν του είναι μικρότερο",
+              "το υγρό εξαφανίζεται",
+              "η πίεση μηδενίζεται"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.4"
+          },
+          {
+            "category": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+            "prompt": "Η αρχή του Πασκάλ εξηγεί τη λειτουργία:",
+            "options": [
+              "του θερμομέτρου",
+              "των υδραυλικών φρένων",
+              "του εκκρεμούς",
+              "του βαρομέτρου υδραργύρου"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.4"
+          },
+          {
+            "category": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+            "prompt": "Σε μια υδραυλική αντλία πολλαπλασιάζεται κυρίως:",
+            "options": [
+              "η πίεση",
+              "η μάζα",
+              "η δύναμη",
+              "ο χρόνος"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.4"
+          },
+          {
+            "category": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+            "prompt": "Όταν η πίεση που ασκούμε σε κλειστό ρευστό αυξάνεται, τότε:",
+            "options": [
+              "αυξάνεται μόνο δίπλα στο έμβολο",
+              "η αύξηση μεταδίδεται παντού",
+              "μειώνεται στο άλλο άκρο",
+              "το ρευστό γίνεται στερεό"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.4"
+          },
+          {
+            "category": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+            "prompt": "Το υγρό σε μια υδραυλική αντλία χρησιμεύει για:",
+            "options": [
+              "να αποθηκεύει μάζα",
+              "να μεταδίδει την πίεση",
+              "να μειώνει το βάρος του αυτοκινήτου",
+              "να ακυρώνει τη βαρύτητα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.4"
+          },
+          {
+            "category": "Ενότητα 4.4: Μετάδοση των πιέσεων στα ρευστά - Αρχή του Πασκάλ",
+            "prompt": "Αν το δεύτερο έμβολο έχει διπλάσιο εμβαδόν από το πρώτο, η δύναμη που μπορεί να ασκηθεί σε αυτό είναι περίπου:",
+            "options": [
+              "η μισή",
+              "ίδια",
+              "διπλάσια",
+              "τετραπλάσια"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.4"
+          }
+        ]
+      },
+      "4.5": {
+        "title": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+        "short": "Ενότητα 4.5",
+        "questions": [
+          {
+            "category": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+            "prompt": "Η άνωση είναι δύναμη που ασκείται:",
+            "options": [
+              "προς τα κάτω",
+              "οριζόντια",
+              "προς τα πάνω",
+              "κυκλικά"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.5"
+          },
+          {
+            "category": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+            "prompt": "Η άνωση εμφανίζεται όταν ένα σώμα:",
+            "options": [
+              "βρίσκεται μέσα σε ρευστό",
+              "είναι μόνο στον αέρα χωρίς καμία αλληλεπίδραση",
+              "κινείται μόνο σε λεία επιφάνεια",
+              "είναι απόλυτα ακίνητο στο κενό"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.5"
+          },
+          {
+            "category": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+            "prompt": "Η άνωση οφείλεται:",
+            "options": [
+              "στη διαφορά πιέσεων στο πάνω και κάτω μέρος του σώματος",
+              "στην τριβή του ρευστού μόνο",
+              "στο χρώμα του ρευστού",
+              "στην ισχύ του σώματος"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.5"
+          },
+          {
+            "category": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+            "prompt": "Σύμφωνα με την αρχή του Αρχιμήδη, η άνωση είναι ίση με:",
+            "options": [
+              "το βάρος του σώματος πάντα",
+              "το βάρος του ρευστού που εκτοπίζει το σώμα",
+              "τη μάζα του σώματος",
+              "την πίεση του ρευστού"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.5"
+          },
+          {
+            "category": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+            "prompt": "Αν βυθίσουμε το ίδιο σώμα σε νερό και σε λάδι, μεγαλύτερη άνωση θα δεχτεί συνήθως:",
+            "options": [
+              "στο λιγότερο πυκνό ρευστό",
+              "στο πυκνότερο ρευστό",
+              "και στα δύο ίδια πάντα",
+              "σε κανένα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.5"
+          },
+          {
+            "category": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+            "prompt": "Γιατί ένα σώμα μέσα στο νερό φαίνεται ελαφρύτερο;",
+            "options": [
+              "επειδή μειώνεται η μάζα του",
+              "επειδή δέχεται άνωση",
+              "επειδή χάνει όγκο",
+              "επειδή παύει να έχει βάρος"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.5"
+          },
+          {
+            "category": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+            "prompt": "Τα πλοία επιπλέουν επειδή:",
+            "options": [
+              "δεν έχουν βάρος",
+              "η άνωση μπορεί να εξισορροπεί το βάρος τους",
+              "δεν επηρεάζονται από τη βαρύτητα",
+              "η πίεση του αέρα είναι μηδέν"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K4",
+            "sectionKey": "4.5"
+          },
+          {
+            "category": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+            "prompt": "Ένα σώμα βυθισμένο σε ρευστό δέχεται πάντα:",
+            "options": [
+              "μόνο βάρος",
+              "μόνο άνωση",
+              "βάρος και άνωση",
+              "ούτε βάρος ούτε άνωση"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.5"
+          },
+          {
+            "category": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+            "prompt": "Η άνωση εξαρτάται από:",
+            "options": [
+              "τον όγκο του ρευστού που εκτοπίζεται",
+              "μόνο το χρώμα του σώματος",
+              "μόνο το υλικό του δοχείου",
+              "τον χρόνο βύθισης"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K4",
+            "sectionKey": "4.5"
+          },
+          {
+            "category": "Ενότητα 4.5: Άνωση - Αρχή του Αρχιμήδη",
+            "prompt": "Σε σώμα που επιπλέει στην επιφάνεια ισχύει ότι:",
+            "options": [
+              "η άνωση είναι μικρότερη από το βάρος",
+              "η άνωση είναι μεγαλύτερη από το βάρος",
+              "η άνωση εξισορροπεί το βάρος",
+              "δεν ασκείται βάρος"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K4",
+            "sectionKey": "4.5"
+          }
+        ]
+      }
+    }
+  },
+  "K5": {
+    "title": "Κεφάλαιο 5 - Ενέργεια",
+    "short": "Κεφάλαιο 5",
+    "sections": {
+      "5.1": {
+        "title": "Ενότητα 5.1: Έργο και ενέργεια",
+        "short": "Ενότητα 5.1",
+        "questions": [
+          {
+            "category": "Ενότητα 5.1: Έργο και ενέργεια",
+            "prompt": "Στη Φυσική το έργο συνδέεται με:",
+            "options": [
+              "τη μεταφορά ή μετατροπή ενέργειας μέσω δύναμης",
+              "οποιαδήποτε ανθρώπινη εργασία",
+              "μόνο την κούραση",
+              "μόνο το χρόνο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.1"
+          },
+          {
+            "category": "Ενότητα 5.1: Έργο και ενέργεια",
+            "prompt": "Πότε παράγεται έργο από μια δύναμη;",
+            "options": [
+              "Όταν υπάρχει δύναμη και μετατόπιση",
+              "Όταν υπάρχει μόνο δύναμη χωρίς μετατόπιση",
+              "Όταν υπάρχει μόνο μάζα",
+              "Όταν υπάρχει μόνο χρόνος"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.1"
+          },
+          {
+            "category": "Ενότητα 5.1: Έργο και ενέργεια",
+            "prompt": "Στην απλή περίπτωση που η δύναμη είναι παράλληλη με τη μετατόπιση, το έργο υπολογίζεται από:",
+            "options": [
+              "W = F/Δx",
+              "W = F·Δx",
+              "W = Δx/F",
+              "W = m·g"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.1"
+          },
+          {
+            "category": "Ενότητα 5.1: Έργο και ενέργεια",
+            "prompt": "Η μονάδα έργου στο S.I. είναι:",
+            "options": [
+              "το newton",
+              "το pascal",
+              "το joule",
+              "το watt"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.1"
+          },
+          {
+            "category": "Ενότητα 5.1: Έργο και ενέργεια",
+            "prompt": "Αν η ίδια δύναμη προκαλέσει μεγαλύτερη μετατόπιση στην ίδια κατεύθυνση, το έργο:",
+            "options": [
+              "μειώνεται",
+              "παραμένει ίδιο",
+              "αυξάνεται",
+              "μηδενίζεται"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.1"
+          },
+          {
+            "category": "Ενότητα 5.1: Έργο και ενέργεια",
+            "prompt": "Όταν σηκώνεις ένα βιβλίο σε ψηλότερο ράφι, η δύναμη που ασκείς παράγει έργο επειδή:",
+            "options": [
+              "δεν υπάρχει μετατόπιση",
+              "υπάρχει μετατόπιση προς την κατεύθυνση της δύναμης",
+              "μηδενίζεται το βάρος",
+              "το βιβλίο γίνεται ελαφρύτερο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.1"
+          },
+          {
+            "category": "Ενότητα 5.1: Έργο και ενέργεια",
+            "prompt": "Το έργο δείχνει πόση:",
+            "options": [
+              "μάζα χάνει ένα σώμα",
+              "ενέργεια μεταφέρεται ή μετατρέπεται",
+              "πίεση ασκείται",
+              "θερμοκρασία αποκτά"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.1"
+          },
+          {
+            "category": "Ενότητα 5.1: Έργο και ενέργεια",
+            "prompt": "Αν μια δύναμη 10 N μετακινήσει σώμα κατά 2 m στην ίδια κατεύθυνση, το έργο είναι:",
+            "options": [
+              "5 J",
+              "10 J",
+              "20 J",
+              "200 J"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.1"
+          },
+          {
+            "category": "Ενότητα 5.1: Έργο και ενέργεια",
+            "prompt": "Σε ποια περίπτωση παράγεται μεγαλύτερο έργο;",
+            "options": [
+              "F=5 N και Δx=1 m",
+              "F=5 N και Δx=3 m",
+              "F=2 N και Δx=1 m",
+              "F=1 N και Δx=1 m"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.1"
+          },
+          {
+            "category": "Ενότητα 5.1: Έργο και ενέργεια",
+            "prompt": "Η έννοια του έργου στη Φυσική διαφέρει από την καθημερινή χρήση γιατί:",
+            "options": [
+              "στη Φυσική έχει ακριβή ορισμό",
+              "στη Φυσική δεν μετριέται",
+              "στη Φυσική δεν συνδέεται με δύναμη",
+              "στη Φυσική σημαίνει μόνο κόπωση"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.1"
+          }
+        ]
+      },
+      "5.2": {
+        "title": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+        "short": "Ενότητα 5.2",
+        "questions": [
+          {
+            "category": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+            "prompt": "Οι δύο βασικές μορφές ενέργειας της υποενότητας είναι:",
+            "options": [
+              "θερμική και χημική",
+              "δυναμική και κινητική",
+              "ηλεκτρική και πυρηνική",
+              "φωτεινή και ηχητική"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.2"
+          },
+          {
+            "category": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+            "prompt": "Ένα σώμα έχει βαρυτική δυναμική ενέργεια όταν:",
+            "options": [
+              "βρίσκεται σε ύψος",
+              "είναι πάντα ακίνητο στο έδαφος",
+              "είναι μόνο υγρό",
+              "δεν έχει βάρος"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.2"
+          },
+          {
+            "category": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+            "prompt": "Η βαρυτική δυναμική ενέργεια εξαρτάται από:",
+            "options": [
+              "το βάρος και το ύψος",
+              "μόνο το χρώμα",
+              "μόνο το χρόνο",
+              "την πίεση του αέρα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.2"
+          },
+          {
+            "category": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+            "prompt": "Ένα κινούμενο σώμα έχει:",
+            "options": [
+              "μόνο δυναμική ενέργεια",
+              "μόνο πίεση",
+              "κινητική ενέργεια",
+              "μόνο ισχύ"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.2"
+          },
+          {
+            "category": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+            "prompt": "Η κινητική ενέργεια εξαρτάται από:",
+            "options": [
+              "τη μάζα και την ταχύτητα",
+              "μόνο την επιφάνεια",
+              "μόνο το ύψος",
+              "μόνο τη θερμοκρασία"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.2"
+          },
+          {
+            "category": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+            "prompt": "Αν διπλασιαστεί η μάζα ενός σώματος που κινείται με την ίδια ταχύτητα, η κινητική του ενέργεια:",
+            "options": [
+              "μειώνεται",
+              "παραμένει ίδια",
+              "αυξάνεται",
+              "μηδενίζεται"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.2"
+          },
+          {
+            "category": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+            "prompt": "Όταν ένα σώμα ανεβαίνει ψηλότερα, η βαρυτική δυναμική του ενέργεια:",
+            "options": [
+              "μειώνεται",
+              "μένει ίδια",
+              "αυξάνεται",
+              "γίνεται αρνητική"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.2"
+          },
+          {
+            "category": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+            "prompt": "Σε ποια περίπτωση ένα σώμα έχει μεγαλύτερη δυναμική ενέργεια;",
+            "options": [
+              "ίδιο βάρος, μικρότερο ύψος",
+              "ίδιο βάρος, μεγαλύτερο ύψος",
+              "μικρότερο βάρος, ίδιο ύψος",
+              "μηδενικό ύψος"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.2"
+          },
+          {
+            "category": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+            "prompt": "Η μονάδα της δυναμικής και της κινητικής ενέργειας είναι:",
+            "options": [
+              "N",
+              "Pa",
+              "J",
+              "W"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.2"
+          },
+          {
+            "category": "Ενότητα 5.2: Δυναμική-Κινητική ενέργεια. Δύο βασικές μορφές ενέργειας",
+            "prompt": "Ένα αυτοκίνητο που κινείται γρηγορότερα από ένα άλλο ίσης μάζας έχει:",
+            "options": [
+              "μικρότερη κινητική ενέργεια",
+              "μεγαλύτερη κινητική ενέργεια",
+              "ίδια δυναμική ενέργεια μόνο",
+              "μηδενική ενέργεια"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.2"
+          }
+        ]
+      },
+      "5.3": {
+        "title": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+        "short": "Ενότητα 5.3",
+        "questions": [
+          {
+            "category": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+            "prompt": "Η μηχανική ενέργεια ενός σώματος είναι:",
+            "options": [
+              "μόνο η δυναμική ενέργεια",
+              "μόνο η κινητική ενέργεια",
+              "το άθροισμα κινητικής και δυναμικής",
+              "η χημική ενέργεια"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.3"
+          },
+          {
+            "category": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+            "prompt": "Κατά την άνοδο μιας μπάλας που εκτοξεύεται προς τα πάνω:",
+            "options": [
+              "η κινητική αυξάνεται και η δυναμική μειώνεται",
+              "η κινητική μειώνεται και η δυναμική αυξάνεται",
+              "και οι δύο μηδενίζονται",
+              "η μηχανική ενέργεια εξαφανίζεται"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.3"
+          },
+          {
+            "category": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+            "prompt": "Στο ανώτερο σημείο της τροχιάς μιας κατακόρυφα εκτοξευμένης μπάλας:",
+            "options": [
+              "η κινητική είναι μέγιστη",
+              "η ταχύτητα είναι στιγμιαία μηδέν",
+              "η δυναμική είναι μηδέν",
+              "δεν υπάρχει βάρος"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.3"
+          },
+          {
+            "category": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+            "prompt": "Κατά την κάθοδο μιας μπάλας:",
+            "options": [
+              "η δυναμική μετατρέπεται σε κινητική",
+              "η κινητική μετατρέπεται σε δυναμική",
+              "καμία μετατροπή δεν συμβαίνει",
+              "όλη η ενέργεια χάνεται"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.3"
+          },
+          {
+            "category": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+            "prompt": "Όταν οι αντιστάσεις είναι αμελητέες, η μηχανική ενέργεια:",
+            "options": [
+              "διατηρείται",
+              "μειώνεται πάντα",
+              "αυξάνεται πάντα",
+              "εξαρτάται μόνο από το χρόνο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.3"
+          },
+          {
+            "category": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+            "prompt": "Αν σε μια κίνηση η δυναμική ενέργεια αυξάνεται, τότε συνήθως η κινητική:",
+            "options": [
+              "αυξάνεται επίσης",
+              "μειώνεται",
+              "μένει πάντα σταθερή",
+              "γίνεται αρνητική"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.3"
+          },
+          {
+            "category": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+            "prompt": "Σε ελεύθερη πτώση χωρίς αντίσταση αέρα, καθώς το σώμα πλησιάζει το έδαφος:",
+            "options": [
+              "η κινητική μειώνεται",
+              "η δυναμική αυξάνεται",
+              "η κινητική αυξάνεται",
+              "η μηχανική εξαφανίζεται"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.3"
+          },
+          {
+            "category": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+            "prompt": "Η διατήρηση της μηχανικής ενέργειας ισχύει όταν:",
+            "options": [
+              "δεν υπάρχουν απώλειες από τριβές",
+              "υπάρχουν μεγάλες τριβές",
+              "η μάζα μηδενίζεται",
+              "το σώμα είναι μόνο ακίνητο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.3"
+          },
+          {
+            "category": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+            "prompt": "Αν ένα αυτοκίνητο διπλασιάσει την ταχύτητά του, η κινητική του ενέργεια:",
+            "options": [
+              "διπλασιάζεται",
+              "τετραπλασιάζεται",
+              "μειώνεται στο μισό",
+              "μένει ίδια"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.3"
+          },
+          {
+            "category": "Ενότητα 5.3: Η μηχανική ενέργεια και η διατήρησή της",
+            "prompt": "Παράδειγμα μηχανικής ενέργειας είναι:",
+            "options": [
+              "η φωτεινή ενός λαμπτήρα μόνο",
+              "η χημική μιας μπαταρίας μόνο",
+              "η κινητική και η δυναμική ενός σώματος",
+              "η θερμική του ήλιου"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.3"
+          }
+        ]
+      },
+      "5.4": {
+        "title": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+        "short": "Ενότητα 5.4",
+        "questions": [
+          {
+            "category": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+            "prompt": "Το έργο μιας δύναμης μπορεί να εκφράζει:",
+            "options": [
+              "μεταφορά ενέργειας",
+              "μόνο μεταβολή μάζας",
+              "μόνο μεταβολή χρώματος",
+              "μόνο μείωση χρόνου"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.4"
+          },
+          {
+            "category": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+            "prompt": "Όταν ποδοσφαιριστής κλοτσά την μπάλα, η ενέργεια που μεταφέρεται στην μπάλα γίνεται κυρίως:",
+            "options": [
+              "κινητική",
+              "πυρηνική",
+              "ηχητική μόνο",
+              "ατμοσφαιρική"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.4"
+          },
+          {
+            "category": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+            "prompt": "Όταν αρσιβαρίστας σηκώνει μπάρα, η ενέργεια που μεταφέρεται στη μπάρα γίνεται κυρίως:",
+            "options": [
+              "δυναμική",
+              "πυρηνική",
+              "ηχητική μόνο",
+              "ατμοσφαιρική"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.4"
+          },
+          {
+            "category": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+            "prompt": "Η ενέργεια των τροφών είναι κυρίως:",
+            "options": [
+              "μηχανική",
+              "χημική",
+              "υδροστατική",
+              "βαρομετρική"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.4"
+          },
+          {
+            "category": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+            "prompt": "Στους έμβιους οργανισμούς, η ενέργεια είναι αποθηκευμένη:",
+            "options": [
+              "στα μόρια ορισμένων χημικών ενώσεων",
+              "μόνο στα κόκαλα",
+              "μόνο στον αέρα",
+              "μόνο στο αίμα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.4"
+          },
+          {
+            "category": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+            "prompt": "Όταν ένας άνθρωπος κινείται ή εργάζεται, μέρος της χημικής ενέργειας του σώματός του μετατρέπεται σε:",
+            "options": [
+              "μηχανική",
+              "μόνο ατμοσφαιρική",
+              "μόνο πίεση",
+              "μόνο βάρος"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.4"
+          },
+          {
+            "category": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+            "prompt": "Η ενέργεια δεν παραμένει πάντα στην ίδια μορφή αλλά:",
+            "options": [
+              "εξαφανίζεται",
+              "μπορεί να αλλάζει μορφές",
+              "γίνεται μάζα μόνο",
+              "χάνει τη μονάδα της"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.4"
+          },
+          {
+            "category": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+            "prompt": "Παράδειγμα μεταφοράς ενέργειας μέσω έργου είναι:",
+            "options": [
+              "η ανύψωση μιας μπάρας",
+              "η μέτρηση της θερμοκρασίας",
+              "η ανάγνωση ενός θερμομέτρου",
+              "η καταγραφή του χρόνου"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.4"
+          },
+          {
+            "category": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+            "prompt": "Όταν το κοντάρι λυγίζει στο άλμα επί κοντώ, η ενέργεια αποθηκεύεται προσωρινά ως:",
+            "options": [
+              "δυναμική ενέργεια παραμόρφωσης",
+              "βάρος",
+              "πίεση",
+              "ισχύς"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.4"
+          },
+          {
+            "category": "Ενότητα 5.4: Μορφές και μετατροπές ενέργειας",
+            "prompt": "Η υποενότητα τονίζει ότι οι διάφορες μεταβολές στη φύση μπορούν να περιγραφούν με όρους:",
+            "options": [
+              "μονάδων μήκους",
+              "μορφών και μεταφοράς ενέργειας",
+              "πίεσης μόνο",
+              "τριβής μόνο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.4"
+          }
+        ]
+      },
+      "5.5": {
+        "title": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+        "short": "Ενότητα 5.5",
+        "questions": [
+          {
+            "category": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+            "prompt": "Η αρχή διατήρησης της ενέργειας λέει ότι:",
+            "options": [
+              "η ενέργεια δημιουργείται από το τίποτα",
+              "η ενέργεια χάνεται τελείως",
+              "η συνολική ενέργεια διατηρείται",
+              "μόνο η μηχανική ενέργεια υπάρχει"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.5"
+          },
+          {
+            "category": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+            "prompt": "Όταν μια κούνια σταματά λόγω τριβών, η μηχανική της ενέργεια:",
+            "options": [
+              "εξαφανίζεται",
+              "μετατρέπεται κυρίως σε θερμική",
+              "γίνεται μάζα",
+              "γίνεται βάρος"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.5"
+          },
+          {
+            "category": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+            "prompt": "Κατά την εκκίνηση αυτοκινήτου, η χημική ενέργεια των καυσίμων μετατρέπεται σε:",
+            "options": [
+              "κινητική και θερμική",
+              "μόνο ατμοσφαιρική",
+              "μόνο υδροστατική",
+              "μόνο πυρηνική"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.5"
+          },
+          {
+            "category": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+            "prompt": "Όταν ένα αυτοκίνητο φρενάρει, μέρος της κινητικής του ενέργειας μετατρέπεται σε:",
+            "options": [
+              "θερμική",
+              "βαρυτική μόνο",
+              "πυρηνική",
+              "δυναμική μόνο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.5"
+          },
+          {
+            "category": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+            "prompt": "Η διατήρηση της ενέργειας ισχύει:",
+            "options": [
+              "μόνο στα μηχανικά φαινόμενα",
+              "σε όλα τα φυσικά φαινόμενα",
+              "μόνο στα ηλεκτρικά",
+              "μόνο στα θερμικά"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.5"
+          },
+          {
+            "category": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+            "prompt": "Στην αρχή διατήρησης της ενέργειας, αυτό που αλλάζει είναι:",
+            "options": [
+              "η συνολική ποσότητα της ενέργειας",
+              "η μορφή της ενέργειας",
+              "η ύπαρξη της ενέργειας",
+              "η μονάδα της ενέργειας"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.5"
+          },
+          {
+            "category": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+            "prompt": "Αν σε ένα φαινόμενο η μηχανική ενέργεια μειώνεται λόγω τριβών, η συνολική ενέργεια:",
+            "options": [
+              "επίσης μειώνεται",
+              "παραμένει σταθερή αν ληφθούν υπόψη όλες οι μορφές",
+              "μηδενίζεται",
+              "δεν ορίζεται"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.5"
+          },
+          {
+            "category": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+            "prompt": "Η αρχή διατήρησης της ενέργειας μάς βοηθά να:",
+            "options": [
+              "περιγράφουμε τις μετατροπές ενέργειας",
+              "μετράμε μόνο μάζες",
+              "βρίσκουμε μόνο πιέσεις",
+              "καταργούμε τις τριβές"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.5"
+          },
+          {
+            "category": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+            "prompt": "Ποια πρόταση είναι σωστή;",
+            "options": [
+              "Η ενέργεια δημιουργείται και καταστρέφεται εύκολα",
+              "Η ενέργεια μετατρέπεται αλλά δεν χάνεται συνολικά",
+              "Η θερμότητα δεν είναι ενέργεια",
+              "Το έργο δεν συνδέεται με ενέργεια"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.5"
+          },
+          {
+            "category": "Ενότητα 5.5: Διατήρηση της ενέργειας",
+            "prompt": "Η μηχανική ενέργεια μπορεί να μετατραπεί σε θερμική κυρίως λόγω:",
+            "options": [
+              "βαρύτητας μόνο",
+              "τριβών",
+              "πίεσης αέρα μόνο",
+              "άνωσης"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.5"
+          }
+        ]
+      },
+      "5.7": {
+        "title": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+        "short": "Ενότητα 5.7",
+        "questions": [
+          {
+            "category": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+            "prompt": "Η απόδοση μιας μηχανής ορίζεται ως:",
+            "options": [
+              "χρήσιμη ενέργεια προς προσφερόμενη ενέργεια",
+              "προσφερόμενη ενέργεια προς χρήσιμη",
+              "έργο προς χρόνο",
+              "δύναμη προς επιφάνεια"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.7"
+          },
+          {
+            "category": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+            "prompt": "Η απόδοση εκφράζεται συνήθως σε:",
+            "options": [
+              "kg",
+              "m/s",
+              "%",
+              "Pa"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.7"
+          },
+          {
+            "category": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+            "prompt": "Η απόδοση μιας μηχανής είναι πάντοτε:",
+            "options": [
+              "μεγαλύτερη από 100%",
+              "μικρότερη ή ίση με 100%",
+              "ίση με 0 πάντα",
+              "ίση με τη μάζα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.7"
+          },
+          {
+            "category": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+            "prompt": "Σε κάθε μηχανή, η χρήσιμη ενέργεια είναι:",
+            "options": [
+              "πάντα μεγαλύτερη από την προσφερόμενη",
+              "ίση ή μικρότερη από την προσφερόμενη",
+              "άσχετη με την προσφερόμενη",
+              "πάντα μηδέν"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.7"
+          },
+          {
+            "category": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+            "prompt": "Το υπόλοιπο της προσφερόμενης ενέργειας που δεν είναι χρήσιμο συνήθως διασκορπίζεται ως:",
+            "options": [
+              "θερμική ενέργεια",
+              "μάζα",
+              "πίεση",
+              "όγκος"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.7"
+          },
+          {
+            "category": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+            "prompt": "Ένας λαμπτήρας πυράκτωσης έχει μικρή απόδοση γιατί:",
+            "options": [
+              "δίνει κυρίως θερμότητα και όχι φως",
+              "δεν καταναλώνει ενέργεια",
+              "δεν θερμαίνεται ποτέ",
+              "δεν μετατρέπει ενέργεια"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.7"
+          },
+          {
+            "category": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+            "prompt": "Οι λαμπτήρες φθορισμού προτείνονται γιατί:",
+            "options": [
+              "έχουν μικρότερη απόδοση",
+              "έχουν μεγαλύτερη ωφέλιμη φωτεινή ενέργεια",
+              "δεν χρησιμοποιούν ηλεκτρική ενέργεια",
+              "είναι πάντα πιο βαρείς"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.7"
+          },
+          {
+            "category": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+            "prompt": "Αν μια μηχανή έχει απόδοση 80%, αυτό σημαίνει ότι:",
+            "options": [
+              "το 80% της προσφερόμενης ενέργειας είναι χρήσιμο",
+              "το 80% χάνεται όλο",
+              "η απόδοση ξεπερνά το όριο",
+              "δεν υπάρχει θερμική απώλεια"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.7"
+          },
+          {
+            "category": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+            "prompt": "Η μεγάλη απόδοση είναι επιθυμητή γιατί:",
+            "options": [
+              "σπαταλάμε περισσότερη ενέργεια",
+              "παίρνουμε μεγαλύτερο ωφέλιμο αποτέλεσμα",
+              "αυξάνεται η μάζα της μηχανής",
+              "αυξάνεται το βάρος της γης"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.7"
+          },
+          {
+            "category": "Ενότητα 5.7: Απόδοση μιας μηχανής",
+            "prompt": "Η απόδοση συνδέεται με:",
+            "options": [
+              "το πόσο αποτελεσματικά μετατρέπεται η ενέργεια",
+              "το πόσο μεγάλη είναι η πίεση",
+              "τη θερμοκρασία μόνο",
+              "τη μάζα μόνο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.7"
+          }
+        ]
+      },
+      "5.8": {
+        "title": "Ενότητα 5.8: Ισχύς",
+        "short": "Ενότητα 5.8",
+        "questions": [
+          {
+            "category": "Ενότητα 5.8: Ισχύς",
+            "prompt": "Η ισχύς συνδέει:",
+            "options": [
+              "το έργο με το χρόνο",
+              "τη μάζα με το χρόνο",
+              "τη δύναμη με την πίεση",
+              "τον όγκο με τη θερμοκρασία"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.8"
+          },
+          {
+            "category": "Ενότητα 5.8: Ισχύς",
+            "prompt": "Η ισχύς δείχνει:",
+            "options": [
+              "πόσο γρήγορα παράγεται έργο ή μετατρέπεται ενέργεια",
+              "πόσο βαριά είναι μια μηχανή",
+              "πόσο μεγάλη είναι η πίεση",
+              "πόσο μεγάλο είναι το σώμα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.8"
+          },
+          {
+            "category": "Ενότητα 5.8: Ισχύς",
+            "prompt": "Η μονάδα ισχύος στο S.I. είναι:",
+            "options": [
+              "joule",
+              "watt",
+              "newton",
+              "pascal"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.8"
+          },
+          {
+            "category": "Ενότητα 5.8: Ισχύς",
+            "prompt": "1 watt ισούται με:",
+            "options": [
+              "1 J/s",
+              "1 N/m²",
+              "1 kg·m",
+              "1 J·s"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.8"
+          },
+          {
+            "category": "Ενότητα 5.8: Ισχύς",
+            "prompt": "Δύο άτομα ανεβαίνουν την ίδια σκάλα. Περισσότερη ισχύ αναπτύσσει εκείνο που:",
+            "options": [
+              "κάνει το ίδιο έργο σε λιγότερο χρόνο",
+              "έχει μικρότερη μάζα",
+              "παραμένει ακίνητο",
+              "κινείται πιο αργά"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.8"
+          },
+          {
+            "category": "Ενότητα 5.8: Ισχύς",
+            "prompt": "Αν για το ίδιο έργο ο χρόνος διπλασιαστεί, η ισχύς:",
+            "options": [
+              "διπλασιάζεται",
+              "παραμένει ίδια",
+              "υποδιπλασιάζεται",
+              "τετραπλασιάζεται"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.8"
+          },
+          {
+            "category": "Ενότητα 5.8: Ισχύς",
+            "prompt": "Μια συσκευή μεγαλύτερης ισχύος:",
+            "options": [
+              "κάνει οπωσδήποτε λιγότερο έργο",
+              "παράγει το ίδιο έργο πιο γρήγορα",
+              "δεν καταναλώνει ενέργεια",
+              "έχει πάντα μικρότερη απόδοση"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K5",
+            "sectionKey": "5.8"
+          },
+          {
+            "category": "Ενότητα 5.8: Ισχύς",
+            "prompt": "Η ισχύς μπορεί να γραφεί και ως:",
+            "options": [
+              "P = W/t",
+              "P = F/A",
+              "P = m·g",
+              "P = Q/Δθ"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.8"
+          },
+          {
+            "category": "Ενότητα 5.8: Ισχύς",
+            "prompt": "Αν μια μηχανή μετασχηματίζει περισσότερη ενέργεια στο ίδιο χρονικό διάστημα, η ισχύς της είναι:",
+            "options": [
+              "μικρότερη",
+              "ίδια",
+              "μεγαλύτερη",
+              "μηδενική"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K5",
+            "sectionKey": "5.8"
+          },
+          {
+            "category": "Ενότητα 5.8: Ισχύς",
+            "prompt": "Η ισχύς μιας ηλεκτρικής συσκευής αναφέρεται στο:",
+            "options": [
+              "ρυθμό κατανάλωσης ή μετατροπής ενέργειας",
+              "βάρος της",
+              "χρώμα της",
+              "σχήμα της"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K5",
+            "sectionKey": "5.8"
+          }
+        ]
+      }
+    }
+  },
+  "K6": {
+    "title": "Κεφάλαιο 6 - Θερμότητα",
+    "short": "Κεφάλαιο 6",
+    "sections": {
+      "6.2": {
+        "title": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+        "short": "Ενότητα 6.2",
+        "questions": [
+          {
+            "category": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+            "prompt": "Θερμότητα ονομάζουμε:",
+            "options": [
+              "την ενέργεια που μεταφέρεται λόγω διαφοράς θερμοκρασίας",
+              "την ενέργεια που έχει πάντα ένα σώμα αποθηκευμένη",
+              "τη μάζα του θερμού σώματος",
+              "τη θερμοκρασία ενός σώματος"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.2"
+          },
+          {
+            "category": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+            "prompt": "Η θερμότητα μεταφέρεται από:",
+            "options": [
+              "το ψυχρότερο στο θερμότερο σώμα",
+              "το θερμότερο στο ψυχρότερο σώμα",
+              "σώματα ίσης θερμοκρασίας μόνο",
+              "μόνο από στερεά σε υγρά"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.2"
+          },
+          {
+            "category": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+            "prompt": "Όταν θερμαίνουμε νερό σε δοχείο, η αύξηση της θερμοκρασίας δείχνει ότι:",
+            "options": [
+              "μεταφέρεται ενέργεια στο νερό",
+              "χάνεται ενέργεια από το νερό",
+              "μηδενίζεται η μάζα του",
+              "σταματά η κίνηση των μορίων"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.2"
+          },
+          {
+            "category": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+            "prompt": "Όταν θερμαίνουμε αέρα σε κύλινδρο με έμβολο και το έμβολο κινείται, αυτό δείχνει ότι η ενέργεια που μεταφέρεται μπορεί να γίνει:",
+            "options": [
+              "κινητική",
+              "μόνο πίεση",
+              "μόνο βάρος",
+              "μόνο χρώμα"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.2"
+          },
+          {
+            "category": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+            "prompt": "Στην επιστημονική γλώσσα, τα σώματα:",
+            "options": [
+              "περικλείουν θερμότητα",
+              "έχουν ενέργεια αλλά όχι θερμότητα ως αποθηκευμένη ιδιότητα",
+              "δεν έχουν καμία ενέργεια",
+              "έχουν μόνο θερμότητα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.2"
+          },
+          {
+            "category": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+            "prompt": "Μόλις η θερμότητα μεταφερθεί σε ένα σώμα:",
+            "options": [
+              "συνεχίζει να ονομάζεται θερμότητα μέσα στο σώμα",
+              "παύει να ονομάζεται θερμότητα και αποτελεί μορφή ενέργειας του σώματος",
+              "μετατρέπεται σε μάζα",
+              "εξαφανίζεται"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.2"
+          },
+          {
+            "category": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+            "prompt": "Η έννοια της θερμότητας μοιάζει με την έννοια του έργου επειδή και οι δύο εκφράζουν:",
+            "options": [
+              "αποθηκευμένη ύλη",
+              "διαδικασία μεταφοράς ή μετατροπής ενέργειας",
+              "μόνο πίεση",
+              "σταθερή ιδιότητα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.2"
+          },
+          {
+            "category": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+            "prompt": "Αν δύο σώματα έχουν ίδια θερμοκρασία και έρθουν σε επαφή, θερμότητα:",
+            "options": [
+              "μεταφέρεται οπωσδήποτε",
+              "δεν μεταφέρεται καθαρά από το ένα στο άλλο",
+              "μεταφέρεται μόνο προς το βαρύτερο",
+              "μεταφέρεται μόνο προς το μικρότερο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.2"
+          },
+          {
+            "category": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+            "prompt": "Ποια πρόταση είναι σωστή;",
+            "options": [
+              "Η θερμότητα είναι η ίδια έννοια με τη θερμοκρασία",
+              "Η θερμότητα σχετίζεται με διαφορά θερμοκρασίας",
+              "Η θερμότητα μετριέται σε N",
+              "Η θερμότητα δεν είναι ενέργεια"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.2"
+          },
+          {
+            "category": "Ενότητα 6.2: Θερμότητα: Μια μορφή ενέργειας",
+            "prompt": "Παράδειγμα μεταφοράς θερμότητας είναι:",
+            "options": [
+              "μια φλόγα που θερμαίνει νερό",
+              "ένα σώμα που μένει απομονωμένο χωρίς μεταβολή",
+              "η μέτρηση μήκους με χάρακα",
+              "η ισορροπία ενός βιβλίου στο θρανίο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.2"
+          }
+        ]
+      },
+      "6.3": {
+        "title": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+        "short": "Ενότητα 6.3",
+        "questions": [
+          {
+            "category": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+            "prompt": "Η ποσότητα θερμότητας που χρειάζεται για να αλλάξει η θερμοκρασία ενός σώματος εξαρτάται από:",
+            "options": [
+              "τη μάζα, το υλικό και τη μεταβολή της θερμοκρασίας",
+              "μόνο το χρώμα του",
+              "μόνο τον όγκο του δοχείου",
+              "μόνο την πίεση"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.3"
+          },
+          {
+            "category": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+            "prompt": "Αν θερμάνουμε μεγαλύτερη μάζα νερού με τον ίδιο τρόπο, απαιτείται συνήθως:",
+            "options": [
+              "λιγότερη θερμότητα",
+              "η ίδια θερμότητα",
+              "περισσότερη θερμότητα",
+              "καμία θερμότητα"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K6",
+            "sectionKey": "6.3"
+          },
+          {
+            "category": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+            "prompt": "Για μεγαλύτερη μεταβολή θερμοκρασίας στο ίδιο σώμα απαιτείται:",
+            "options": [
+              "λιγότερη θερμότητα",
+              "περισσότερη θερμότητα",
+              "πάντα ίδια θερμότητα",
+              "μηδενική θερμότητα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.3"
+          },
+          {
+            "category": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+            "prompt": "Η ειδική θερμότητα είναι μέγεθος που χαρακτηρίζει:",
+            "options": [
+              "το υλικό",
+              "το σχήμα του σώματος",
+              "το χρώμα του σώματος",
+              "τη θέση του σώματος"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.3"
+          },
+          {
+            "category": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+            "prompt": "Υλικό με μεγάλη ειδική θερμότητα χρειάζεται:",
+            "options": [
+              "μικρή ποσότητα θερμότητας για ίδια μάζα και ίδια αύξηση θερμοκρασίας",
+              "μεγάλη ποσότητα θερμότητας για ίδια μάζα και ίδια αύξηση θερμοκρασίας",
+              "καμία θερμότητα",
+              "πάντα την ίδια θερμότητα με όλα τα άλλα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.3"
+          },
+          {
+            "category": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+            "prompt": "Η βασική σχέση θερμότητας της υποενότητας είναι:",
+            "options": [
+              "Q = m·c·Δθ",
+              "Q = F/A",
+              "Q = W/t",
+              "Q = m/g"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.3"
+          },
+          {
+            "category": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+            "prompt": "Η μονάδα της θερμότητας στο S.I. είναι:",
+            "options": [
+              "kg",
+              "N",
+              "J",
+              "Pa"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K6",
+            "sectionKey": "6.3"
+          },
+          {
+            "category": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+            "prompt": "Το νερό έχει σχετικά μεγάλη ειδική θερμότητα, άρα:",
+            "options": [
+              "ζεσταίνεται και κρυώνει πολύ γρήγορα",
+              "μπορεί να απορροφά ή να αποδίδει πολύ θερμότητα",
+              "δεν αλλάζει ποτέ θερμοκρασία",
+              "δεν χρησιμοποιείται στη θέρμανση"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.3"
+          },
+          {
+            "category": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+            "prompt": "Η ξηρά θερμαίνεται και ψύχεται γρηγορότερα από τη θάλασσα επειδή:",
+            "options": [
+              "έχει μεγαλύτερη ειδική θερμότητα",
+              "έχει μικρότερη ειδική θερμότητα από το νερό",
+              "δεν δέχεται θερμότητα",
+              "είναι πάντα σε σκιά"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.3"
+          },
+          {
+            "category": "Ενότητα 6.3: Πώς μετράμε τη θερμότητα",
+            "prompt": "Αν θερμάνουμε ίσες μάζες νερού και λαδιού με την ίδια παροχή, πιο γρήγορα θα ζεσταθεί εκείνο με:",
+            "options": [
+              "μεγαλύτερη ειδική θερμότητα",
+              "μικρότερη ειδική θερμότητα",
+              "το ίδιο πάντα",
+              "μεγαλύτερη πυκνότητα μόνο"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.3"
+          }
+        ]
+      },
+      "6.4": {
+        "title": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+        "short": "Ενότητα 6.4",
+        "questions": [
+          {
+            "category": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+            "prompt": "Οι δομικοί λίθοι της ύλης είναι:",
+            "options": [
+              "τα μόρια ή άλλα μικροσκοπικά σωματίδια",
+              "οι μονάδες μέτρησης",
+              "οι δυνάμεις",
+              "οι τροχιές"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.4"
+          },
+          {
+            "category": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+            "prompt": "Η μυρωδιά ενός αρώματος απλώνεται στο χώρο επειδή:",
+            "options": [
+              "τα μόρια του αέρα είναι ακίνητα",
+              "τα μόρια κινούνται συνεχώς",
+              "η μάζα του αρώματος μηδενίζεται",
+              "η πίεση εξαφανίζεται"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.4"
+          },
+          {
+            "category": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+            "prompt": "Στα στερεά, οι δομικοί λίθοι:",
+            "options": [
+              "κινούνται ελεύθερα σε μεγάλες αποστάσεις",
+              "βρίσκονται κοντά και ταλαντώνονται γύρω από θέσεις ισορροπίας",
+              "δεν κινούνται καθόλου",
+              "είναι πολύ αραιοί"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.4"
+          },
+          {
+            "category": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+            "prompt": "Στα αέρια, οι δομικοί λίθοι:",
+            "options": [
+              "είναι πολύ κοντά και δε μετακινούνται",
+              "κινούνται ελεύθερα σε όλο το διαθέσιμο χώρο",
+              "παραμένουν δεμένοι σε σταθερές θέσεις",
+              "υπάρχουν μόνο στα θερμά σώματα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.4"
+          },
+          {
+            "category": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+            "prompt": "Η θερμοκρασία συνδέεται μικροσκοπικά με:",
+            "options": [
+              "τη μέση κινητική κατάσταση των δομικών λίθων",
+              "το χρώμα των σωμάτων",
+              "μόνο τη μάζα",
+              "το σχήμα του δοχείου"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.4"
+          },
+          {
+            "category": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+            "prompt": "Όταν αυξάνεται η θερμοκρασία ενός σώματος, συνήθως:",
+            "options": [
+              "μειώνεται η κίνηση των μορίων",
+              "αυξάνεται η κίνηση των μορίων",
+              "μηδενίζεται η θερμότητα",
+              "παύει να υπάρχει ενέργεια"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.4"
+          },
+          {
+            "category": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+            "prompt": "Η θερμότητα που μεταφέρεται σε ένα σώμα μπορεί να προκαλέσει:",
+            "options": [
+              "αλλαγή της κινητικής κατάστασης των δομικών λίθων",
+              "μόνο αλλαγή χρώματος",
+              "μόνο αύξηση μάζας",
+              "μόνο αύξηση πίεσης"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.4"
+          },
+          {
+            "category": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+            "prompt": "Θερμική ισορροπία δύο σωμάτων σημαίνει ότι:",
+            "options": [
+              "έχουν ίση μάζα",
+              "έχουν ίδια θερμοκρασία",
+              "έχουν ίδιο όγκο",
+              "έχουν ίδια πίεση"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.4"
+          },
+          {
+            "category": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+            "prompt": "Το νερό χρησιμοποιείται σε συστήματα ψύξης κινητήρων επειδή:",
+            "options": [
+              "έχει μικρή ειδική θερμότητα",
+              "έχει μεγάλη ειδική θερμότητα",
+              "δεν αλλάζει ποτέ θερμοκρασία",
+              "δεν απορροφά θερμότητα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.4"
+          },
+          {
+            "category": "Ενότητα 6.4: Θερμοκρασία, θερμότητα και μικρόκοσμος",
+            "prompt": "Στη θάλασσα το νερό διατηρεί πιο ήπια τη θερμοκρασία σε σχέση με την ξηρά γιατί:",
+            "options": [
+              "έχει μεγάλη ειδική θερμότητα",
+              "έχει μικρή μάζα",
+              "δεν δέχεται ηλιακή ακτινοβολία",
+              "δεν αποτελείται από μόρια"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.4"
+          }
+        ]
+      },
+      "6.5": {
+        "title": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+        "short": "Ενότητα 6.5",
+        "questions": [
+          {
+            "category": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+            "prompt": "Όταν θερμαίνουμε τα περισσότερα σώματα, αυτά:",
+            "options": [
+              "συστέλλονται",
+              "διαστέλλονται",
+              "δεν αλλάζουν καθόλου",
+              "χάνουν μάζα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.5"
+          },
+          {
+            "category": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+            "prompt": "Όταν ψύχουμε τα περισσότερα σώματα, αυτά:",
+            "options": [
+              "διαστέλλονται",
+              "συστέλλονται",
+              "αυξάνουν τη μάζα τους",
+              "μηδενίζουν τον όγκο τους"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.5"
+          },
+          {
+            "category": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+            "prompt": "Θερμική διαστολή σημαίνει:",
+            "options": [
+              "αύξηση του όγκου ή των διαστάσεων λόγω θέρμανσης",
+              "μείωση της θερμοκρασίας",
+              "αύξηση της μάζας",
+              "αύξηση της πίεσης μόνο"
+            ],
+            "correctIndex": 0,
+            "chapterKey": "K6",
+            "sectionKey": "6.5"
+          },
+          {
+            "category": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+            "prompt": "Το μεταλλικό καπάκι ενός βάζου ανοίγει ευκολότερα με ζεστό νερό επειδή:",
+            "options": [
+              "το νερό μειώνει το βάρος του",
+              "το καπάκι διαστέλλεται",
+              "το γυαλί συστέλλεται περισσότερο",
+              "μηδενίζεται η τριβή"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.5"
+          },
+          {
+            "category": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+            "prompt": "Στο πείραμα με τη σφαίρα και το δακτυλίδι, η θερμαινόμενη σφαίρα δεν περνά γιατί:",
+            "options": [
+              "χάνει μάζα",
+              "διαστέλλεται",
+              "ψύχεται",
+              "μειώνεται η διάμετρός της"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.5"
+          },
+          {
+            "category": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+            "prompt": "Όλα τα σώματα διαστέλλονται το ίδιο όταν θερμαίνονται;",
+            "options": [
+              "Ναι, πάντα",
+              "Όχι, εξαρτάται από το υλικό",
+              "Μόνο τα αέρια",
+              "Μόνο τα υγρά"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.5"
+          },
+          {
+            "category": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+            "prompt": "Οι αρμοί στις σιδηροδρομικές γραμμές αφήνονται για να:",
+            "options": [
+              "χωρούν τα βαγόνια",
+              "αντιμετωπίζεται η διαστολή το καλοκαίρι",
+              "μειώνεται η μάζα των γραμμών",
+              "αυξάνεται η τριβή"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.5"
+          },
+          {
+            "category": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+            "prompt": "Τα ηλεκτρικά καλώδια το χειμώνα φαίνονται πιο τεντωμένα επειδή:",
+            "options": [
+              "διαστέλλονται",
+              "συστέλλονται",
+              "αυξάνουν τη μάζα τους",
+              "δέχονται άνωση"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.5"
+          },
+          {
+            "category": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+            "prompt": "Η θερμική διαστολή αφορά:",
+            "options": [
+              "μόνο τα στερεά",
+              "μόνο τα υγρά",
+              "στερεά, υγρά και αέρια",
+              "μόνο τα μέταλλα"
+            ],
+            "correctIndex": 2,
+            "chapterKey": "K6",
+            "sectionKey": "6.5"
+          },
+          {
+            "category": "Ενότητα 6.5: Θερμική διαστολή και συστολή",
+            "prompt": "Η υποενότητα 6.5 στην ύλη σου προσεγγίζεται:",
+            "options": [
+              "μόνο με μαθηματικές σχέσεις",
+              "ποιοτικά, χωρίς τις μαθηματικές σχέσεις",
+              "μόνο με δύσκολους αριθμητικούς υπολογισμούς",
+              "χωρίς καμία αναφορά σε φαινόμενα"
+            ],
+            "correctIndex": 1,
+            "chapterKey": "K6",
+            "sectionKey": "6.5"
+          }
+        ]
+      }
+    }
+  }
+};
+
+    const gameQuestions = [];
+    let currentIndex = 0;
+    let activePlayer = 1;
+    let p1Score = 0;
+    let p2Score = 0;
+    let currentQuestion = null;
+    let locked = false;
+    let gameStarted = false;
+
+    const modeSelect = document.getElementById("modeSelect");
+    const chapterSelect = document.getElementById("chapterSelect");
+    const questionCountSelect = document.getElementById("questionCount");
+    const avatar1Select = document.getElementById("avatar1");
+    const avatar2Select = document.getElementById("avatar2");
+
+    const p1ScoreEl = document.getElementById("p1Score");
+    const p2ScoreEl = document.getElementById("p2Score");
+    const phaseLabelEl = document.getElementById("phaseLabel");
+    const roundInfoEl = document.getElementById("roundInfo");
+    const selectionInfoEl = document.getElementById("selectionInfo");
+    const turnTextEl = document.getElementById("turnText");
+    const categoryLabelEl = document.getElementById("categoryLabel");
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const messageEl = document.getElementById("message");
+    const ballEl = document.getElementById("ball");
+    const player1Card = document.getElementById("player1Card");
+    const player2Card = document.getElementById("player2Card");
+    const player1AvatarDisplay = document.getElementById("player1AvatarDisplay");
+    const player2AvatarDisplay = document.getElementById("player2AvatarDisplay");
+
+    const countdownOverlay = document.getElementById("countdownOverlay");
+    const countdownNumber = document.getElementById("countdownNumber");
+    const confettiLayer = document.getElementById("confettiLayer");
+
+    modeSelect.addEventListener("change", updateSelectionOptions);
+    avatar1Select.addEventListener("change", syncAvatars);
+    avatar2Select.addEventListener("change", syncAvatars);
+    window.addEventListener("resize", applyAutoFitScaling);
+
+    updateSelectionOptions();
+    syncAvatars();
+    renderIdleState();
+    applyAutoFitScaling();
+
+    function getAllQuestions() {
+      return Object.values(chapterData).flatMap(ch => Object.values(ch.sections).flatMap(sec => sec.questions));
+    }
+
+    function getChapterQuestions(chapterKey) {
+      const chapter = chapterData[chapterKey];
+      return chapter ? Object.values(chapter.sections).flatMap(sec => sec.questions) : [];
+    }
+
+    function getSectionQuestions(sectionKey) {
+      for (const chapter of Object.values(chapterData)) {
+        if (chapter.sections[sectionKey]) return chapter.sections[sectionKey].questions;
+      }
+      return [];
+    }
+
+    function updateSelectionOptions() {
+      const mode = modeSelect.value;
+      chapterSelect.innerHTML = "";
+
+      if (mode === "chapter") {
+        Object.entries(chapterData).forEach(([key, chapter]) => {
+          const option = document.createElement("option");
+          option.value = key;
+          option.textContent = chapter.title;
+          chapterSelect.appendChild(option);
+        });
+        chapterSelect.disabled = false;
+        chapterSelect.style.opacity = "1";
+      } else if (mode === "section") {
+        Object.values(chapterData).forEach(chapter => {
+          Object.entries(chapter.sections).forEach(([sectionKey, section]) => {
+            const option = document.createElement("option");
+            option.value = sectionKey;
+            option.textContent = `${chapter.short} • ${section.title}`;
+            chapterSelect.appendChild(option);
+          });
+        });
+        chapterSelect.disabled = false;
+        chapterSelect.style.opacity = "1";
+      } else {
+        const option = document.createElement("option");
+        option.value = "all";
+        option.textContent = "Όλη η ύλη (Κεφάλαια 1-6)";
+        chapterSelect.appendChild(option);
+        chapterSelect.disabled = true;
+        chapterSelect.style.opacity = "0.55";
+      }
+    }
+
+    function syncAvatars() {
+      player1AvatarDisplay.textContent = avatar1Select.value;
+      player2AvatarDisplay.textContent = avatar2Select.value;
+    }
+
+    function renderIdleState() {
+      gameStarted = false;
+      phaseLabelEl.textContent = "Αναμονή έναρξης";
+      roundInfoEl.textContent = "Γύρος 0 / 0";
+      turnTextEl.textContent = "Πάτησε «Έναρξη / Νέο Παιχνίδι» για να ξεκινήσει ο αγώνας.";
+      categoryLabelEl.textContent = "Κατηγορία: -";
+      questionEl.textContent = "Ο χώρος ερωτήσεων θα ενεργοποιηθεί μόλις επιλεγεί κατηγορία και πατηθεί η έναρξη.";
+      questionEl.classList.add("idle");
+      answersEl.innerHTML = "";
+      answersEl.classList.add("idle");
+      messageEl.textContent = "";
+      ballEl.style.left = "50%";
+      player1Card.classList.remove("active-turn", "winner-glow");
+      player2Card.classList.remove("active-turn", "winner-glow");
+    }
+
+    function applyAutoFitScaling() {
+      if (window.innerWidth <= 820) {
+        document.documentElement.style.setProperty("--game-scale", "1");
+        return;
+      }
+
+      const viewportW = window.innerWidth - 12;
+      const viewportH = window.innerHeight - 12;
+      const designW = 1320;
+      const designH = 780;
+
+      const scaleX = viewportW / designW;
+      const scaleY = viewportH / designH;
+      const scale = Math.min(scaleX, scaleY, 1);
+
+      document.documentElement.style.setProperty("--game-scale", String(scale));
+    }
+
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function buildQuestionSet() {
+      const mode = modeSelect.value;
+      const count = parseInt(questionCountSelect.value, 10);
+      let source = [];
+      let label = "";
+
+      if (mode === "all") {
+        label = "Τυχαίες ερωτήσεις από όλη την ύλη Φυσικής (Κεφάλαια 1-6)";
+        source = getAllQuestions();
+      } else if (mode === "chapter") {
+        const ch = chapterSelect.value;
+        label = chapterData[ch]?.title || "Συγκεκριμένο κεφάλαιο";
+        source = getChapterQuestions(ch);
+      } else {
+        const sectionKey = chapterSelect.value;
+        let sectionTitle = "Συγκεκριμένη υποενότητα";
+        for (const chapter of Object.values(chapterData)) {
+          if (chapter.sections[sectionKey]) {
+            sectionTitle = `${chapter.short} • ${chapter.sections[sectionKey].title}`;
+            break;
+          }
+        }
+        label = sectionTitle;
+        source = getSectionQuestions(sectionKey);
+      }
+
+      selectionInfoEl.textContent = label;
+
+      const shuffled = shuffle(source);
+      if (count <= shuffled.length) return shuffled.slice(0, count);
+
+      const out = [];
+      while (out.length < count) out.push(...shuffle(source));
+      return out.slice(0, count);
+    }
+
+    function playTone(freq, start, duration, gainAmount, type = "sine") {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return null;
+      if (!window.__audioCtx) window.__audioCtx = new AudioContextClass();
+
+      const ctx = window.__audioCtx;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.value = freq;
+
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(gainAmount, start + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + duration + 0.03);
+      return ctx;
+    }
+
+    function ensureAudioReady() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return null;
+      if (!window.__audioCtx) window.__audioCtx = new AudioContextClass();
+      if (window.__audioCtx.state === "suspended") {
+        window.__audioCtx.resume();
+      }
+      return window.__audioCtx;
+    }
+
+    function playStartSound() {
+      try {
+        const ctx = ensureAudioReady();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        playTone(523.25, now, 0.20, 0.22);
+        playTone(659.25, now + 0.12, 0.20, 0.24);
+        playTone(783.99, now + 0.24, 0.24, 0.28);
+      } catch (e) {}
+    }
+
+    function playCorrectSound() {
+      try {
+        const ctx = ensureAudioReady();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        playTone(587.33, now, 0.15, 0.22);
+        playTone(783.99, now + 0.08, 0.22, 0.28);
+      } catch (e) {}
+    }
+
+    function playWrongSound() {
+      try {
+        const ctx = ensureAudioReady();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        playTone(392.00, now, 0.22, 0.20, "triangle");
+        playTone(293.66, now + 0.09, 0.26, 0.22, "triangle");
+      } catch (e) {}
+    }
+
+    function startFromWelcome() {
+      syncAvatars();
+      ensureAudioReady();
+      document.getElementById("welcomeScreen").style.display = "none";
+      document.getElementById("gameScreen").style.display = "block";
+      renderIdleState();
+      applyAutoFitScaling();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startGame() {
+      syncAvatars();
+      ensureAudioReady();
+      renderIdleState();
+      startCountdownThenGame();
+    }
+
+    function startCountdownThenGame() {
+      countdownOverlay.style.display = "flex";
+      const steps = ["3", "2", "1", "Πάμε!"];
+      let idx = 0;
+
+      function showStep() {
+        countdownNumber.textContent = steps[idx];
+        countdownNumber.style.animation = "none";
+        void countdownNumber.offsetWidth;
+        countdownNumber.style.animation = "popIn 0.9s ease";
+
+        if (steps[idx] === "Πάμε!") {
+          playStartSound();
+        }
+
+        idx++;
+        if (idx < steps.length) {
+          setTimeout(showStep, 760);
+        } else {
+          setTimeout(() => {
+            countdownOverlay.style.display = "none";
+            beginActualGame();
+          }, 640);
+        }
+      }
+
+      showStep();
+    }
+
+    function beginActualGame() {
+      const builtSet = buildQuestionSet();
+      gameQuestions.length = 0;
+      gameQuestions.push(...builtSet);
+      currentIndex = 0;
+      activePlayer = 1;
+      p1Score = 0;
+      p2Score = 0;
+      locked = false;
+      gameStarted = true;
+      updateScores();
+      updateTurnUI();
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      if (currentIndex >= gameQuestions.length) {
+        endGame();
+        return;
+      }
+
+      currentQuestion = gameQuestions[currentIndex];
+      locked = false;
+      questionEl.textContent = currentQuestion.prompt;
+      questionEl.classList.remove("idle");
+      categoryLabelEl.textContent = `Κατηγορία: ${currentQuestion.category}`;
+      phaseLabelEl.textContent = currentQuestion.chapterKey && chapterData[currentQuestion.chapterKey]
+        ? chapterData[currentQuestion.chapterKey].title
+        : currentQuestion.category;
+      roundInfoEl.textContent = `Γύρος ${currentIndex + 1} / ${gameQuestions.length}`;
+      messageEl.textContent = "";
+      ballEl.style.left = "50%";
+
+      renderAnswers();
+      updateTurnUI();
+    }
+
+    function renderAnswers() {
+      answersEl.innerHTML = "";
+      answersEl.classList.remove("idle");
+      currentQuestion.options.forEach((option, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "answerBtn";
+        btn.textContent = option;
+        btn.addEventListener("click", () => submitChoice(idx, btn));
+        answersEl.appendChild(btn);
+      });
+    }
+
+    function submitChoice(choiceIndex, clickedButton) {
+      if (locked || !gameStarted) return;
+      locked = true;
+
+      const buttons = [...document.querySelectorAll(".answerBtn")];
+      buttons.forEach(btn => btn.disabled = true);
+
+      const correctButton = buttons[currentQuestion.correctIndex];
+
+      if (choiceIndex === currentQuestion.correctIndex) {
+        clickedButton.classList.add("correct");
+        playCorrectSound();
+
+        if (activePlayer === 1) {
+          p1Score++;
+          ballEl.style.left = "22%";
+          messageEl.textContent = "Σωστό! Η Ομάδα 1 παίρνει πόντο.";
+        } else {
+          p2Score++;
+          ballEl.style.left = "78%";
+          messageEl.textContent = "Σωστό! Η Ομάδα 2 παίρνει πόντο.";
+        }
+      } else {
+        clickedButton.classList.add("wrong");
+        if (correctButton) correctButton.classList.add("correct");
+        playWrongSound();
+        messageEl.textContent = `Λάθος. Σωστή απάντηση: ${currentQuestion.options[currentQuestion.correctIndex]}`;
+      }
+
+      updateScores();
+
+      setTimeout(() => {
+        currentIndex++;
+        activePlayer = activePlayer === 1 ? 2 : 1;
+        nextQuestion();
+      }, 1250);
+    }
+
+    function updateScores() {
+      p1ScoreEl.textContent = p1Score;
+      p2ScoreEl.textContent = p2Score;
+    }
+
+    function updateTurnUI() {
+      player1Card.classList.remove("active-turn");
+      player2Card.classList.remove("active-turn");
+
+      if (!gameStarted) return;
+
+      if (activePlayer === 1) {
+        player1Card.classList.add("active-turn");
+        turnTextEl.textContent = `Σειρά της Παίκτριας/του Παίκτη - Ομάδας 1 ${avatar1Select.value}`;
+      } else {
+        player2Card.classList.add("active-turn");
+        turnTextEl.textContent = `Σειρά της Παίκτριας/του Παίκτη - Ομάδας 2 ${avatar2Select.value}`;
+      }
+    }
+
+    function launchConfetti() {
+      confettiLayer.innerHTML = "";
+      const colors = ["#ff4f87", "#6b5cff", "#08c4ff", "#ffbd3e", "#20b45b", "#ffffff"];
+      for (let i = 0; i < 90; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti";
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDuration = `${3 + Math.random() * 2}s`;
+        piece.style.animationDelay = `${Math.random() * 0.8}s`;
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        confettiLayer.appendChild(piece);
+      }
+      setTimeout(() => confettiLayer.innerHTML = "", 6000);
+    }
+
+    function endGame() {
+      answersEl.innerHTML = "";
+      answersEl.classList.add("idle");
+      categoryLabelEl.textContent = "Τέλος παιχνιδιού";
+      phaseLabelEl.textContent = "Ο αγώνας ολοκληρώθηκε";
+      roundInfoEl.textContent = "Τελικό σκορ";
+      turnTextEl.textContent = "Μπράβο και στις δύο ομάδες!";
+      gameStarted = false;
+
+      player1Card.classList.remove("active-turn");
+      player2Card.classList.remove("active-turn");
+
+      if (p1Score > p2Score) {
+        questionEl.textContent = `Νικήτρια: Ομάδα 1 ${avatar1Select.value}!`;
+        questionEl.classList.remove("idle");
+        player1Card.classList.add("winner-glow");
+        launchConfetti();
+      } else if (p2Score > p1Score) {
+        questionEl.textContent = `Νικήτρια: Ομάδα 2 ${avatar2Select.value}!`;
+        questionEl.classList.remove("idle");
+        player2Card.classList.add("winner-glow");
+        launchConfetti();
+      } else {
+        questionEl.textContent = "Ισοπαλία!";
+        questionEl.classList.remove("idle");
+        launchConfetti();
+      }
+
+      messageEl.textContent = `Τελικό σκορ: Ομάδα 1 = ${p1Score} | Ομάδα 2 = ${p2Score}`;
+      ballEl.style.left = "50%";
+    }
+  </script>
+
+</body>
+</html>
